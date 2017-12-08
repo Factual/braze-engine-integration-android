@@ -1,0 +1,95 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+android {
+    buildToolsVersion '26.0.2'
+    compileSdkVersion 26
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    factualEngineVersion = "5.3.0"
+    brazeVersion = "2.2.1"
+    artifact = "engine-braze"
+    libraryVersion = "1.0.0"
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    compile "com.factual:engine-sdk:${factualEngineVersion}"
+    compile "com.appboy:android-sdk-base:${brazeVersion}"
+}
+
+// local repo
+install {
+    repositories {
+        mavenInstaller {
+            pom {
+                project {
+                    groupId 'com.factual.engine.braze'
+                    artifactId artifact
+                    version libraryVersion
+
+                    name 'EngineBraze'
+                    description 'Factual Engine and Braze SDK Integration'
+                    url 'https://github.com/Factual/engine-braze-integration-android'
+                    licenses {
+                        license {
+                            name 'The MIT License (MIT)'
+                            url 'http://opensource.org/licenses/MIT'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'factual'
+                            name 'Factual, Inc.'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// external repo
+uploadArchives {
+    repositories {
+        def deployRepoUrl = System.getenv('DEPLOY_REPO_URL') ?: ''
+        def deployRepoUser = System.getenv('DEPLOY_REPO_USER') ?: ''
+        def deployRepoPass = System.getenv('DEPLOY_REPO_PASS') ?: ''
+
+        mavenDeployer {
+            repository(url: deployRepoUrl) {
+                authentication(userName: deployRepoUser, password: deployRepoPass)
+            }
+            pom = install.repositories.mavenInstaller.pom
+        }
+    }
+}
