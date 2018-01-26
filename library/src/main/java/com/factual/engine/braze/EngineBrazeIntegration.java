@@ -8,7 +8,7 @@ import com.factual.engine.FactualEngine;
 import com.factual.engine.api.FactualCircumstanceException;
 
 public class EngineBrazeIntegration {
-    public static final String EXPECTED_ACTION_ID = "upload_to_braze";
+    public static final String EXPECTED_ACTION_ID = "push-to-braze";
     public static final int NUM_MAX_EVENTS_PER_CIRCUMSTANCE_DEFAULT = 10;
     public static final String CIRCUMSTANCE_EVENT_NAME_PREFIX = "engine_circumstance_";
     public static final String CIRCUMSTANCE_PLACE_AT_EVENT_NAME_PREFIX = "engine_circumstance_place_at_";
