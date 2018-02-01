@@ -10,7 +10,7 @@ import com.factual.engine.api.FactualPlace;
 import java.util.List;
 import java.util.UUID;
 
-public class EngineBrazeBroadcastReceiver extends FactualActionReceiver {
+public class BrazeEngineBroadcastReceiver extends FactualActionReceiver {
 
     @Override
     public void onCircumstancesMet(List<CircumstanceResponse> responses) {
@@ -19,7 +19,7 @@ public class EngineBrazeBroadcastReceiver extends FactualActionReceiver {
 
         for (CircumstanceResponse response : responses) {
             String circumstanceId = response.getCircumstance().getCircumstanceId();
-            if (EngineBrazeIntegration.USER_JOURNEY_CIRCUMSTANCE_ID.equals(circumstanceId)) {
+            if (BrazeEngineIntegration.USER_JOURNEY_CIRCUMSTANCE_ID.equals(circumstanceId)) {
                 pushUserJourneyEvent(appboy, response);
             } else {
                 pushGeneralCircumstanceEvents(appboy, context, response);
@@ -30,21 +30,21 @@ public class EngineBrazeBroadcastReceiver extends FactualActionReceiver {
     private void pushUserJourneyEvent(Appboy appboy, CircumstanceResponse response) {
         List<FactualPlace> places = response.getAtPlaces();
         AppboyProperties properties = createPlaceAppBoyProperties(places.get(0), response.getLocation());
-        appboy.logCustomEvent(EngineBrazeIntegration.USER_JOURNEY_CIRCUMSTANCE_ID, properties);
+        appboy.logCustomEvent(BrazeEngineIntegration.USER_JOURNEY_CIRCUMSTANCE_ID, properties);
     }
 
     private void pushGeneralCircumstanceEvents(Appboy appboy, Context context, CircumstanceResponse response) {
         String circumstanceId = response.getCircumstance().getCircumstanceId();
-        String circumstanceEventName = EngineBrazeIntegration.CIRCUMSTANCE_EVENT_NAME_PREFIX+circumstanceId;
-        String circumstancePlaceAtEventName = EngineBrazeIntegration.CIRCUMSTANCE_PLACE_AT_EVENT_NAME_PREFIX+circumstanceId;
+        String circumstanceEventName = BrazeEngineIntegration.CIRCUMSTANCE_EVENT_NAME_PREFIX+circumstanceId;
+        String circumstancePlaceAtEventName = BrazeEngineIntegration.CIRCUMSTANCE_PLACE_AT_EVENT_NAME_PREFIX+circumstanceId;
         String incidenceId = UUID.randomUUID().toString();
         Location location = response.getLocation();
         List<FactualPlace> places = response.getAtPlaces();
 
         appboy.logCustomEvent(circumstanceEventName, createCircumstanceAppBoyProperties(incidenceId, location));
 
-        int maxEventsPerCircumstance = context.getSharedPreferences(EngineBrazeIntegration.class.getName(), Context.MODE_PRIVATE)
-                .getInt(EngineBrazeIntegration.NUM_MAX_EVENTS_PER_CIRCUMSTANCE_KEY, EngineBrazeIntegration.NUM_MAX_EVENTS_PER_CIRCUMSTANCE_DEFAULT);
+        int maxEventsPerCircumstance = context.getSharedPreferences(BrazeEngineIntegration.class.getName(), Context.MODE_PRIVATE)
+                .getInt(BrazeEngineIntegration.NUM_MAX_EVENTS_PER_CIRCUMSTANCE_KEY, BrazeEngineIntegration.NUM_MAX_EVENTS_PER_CIRCUMSTANCE_DEFAULT);
 
         for (int i = 0; i < maxEventsPerCircumstance && i < places.size(); i++) {
             AppboyProperties properties = createPlaceAppBoyProperties(places.get(i), location, incidenceId);

@@ -5,7 +5,7 @@ import com.factual.FactualCircumstance;
 import com.factual.engine.FactualEngine;
 import com.factual.engine.api.FactualCircumstanceException;
 
-public class EngineBrazeIntegration {
+public class BrazeEngineIntegration {
     public static final String EXPECTED_ACTION_ID = "push-to-braze";
     public static final int NUM_MAX_EVENTS_PER_CIRCUMSTANCE_DEFAULT = 10;
     public static final String CIRCUMSTANCE_EVENT_NAME_PREFIX = "engine_circumstance_";
@@ -32,7 +32,7 @@ public class EngineBrazeIntegration {
 
 
     /**
-     * @see EngineBrazeIntegration#initializeEngineBrazeIntegration(Context)
+     * @see BrazeEngineIntegration#initializeEngineBrazeIntegration(Context)
      * @param enableUserJourney whether user journey events should trigger a Braze custom event
      */
     public static void initializeEngineBrazeIntegration(Context context, boolean enableUserJourney) {
@@ -40,12 +40,12 @@ public class EngineBrazeIntegration {
     }
 
     /**
-     * @see EngineBrazeIntegration#initializeEngineBrazeIntegration(Context, boolean)
+     * @see BrazeEngineIntegration#initializeEngineBrazeIntegration(Context, boolean)
      * @param numMaxEventsPerCircumstance max number of custom braze events to push for each place that triggered a circumstance
      */
     public static void initializeEngineBrazeIntegration(Context context, boolean enableUserJourney, int numMaxEventsPerCircumstance) {
         context.getApplicationContext()
-                .getSharedPreferences(EngineBrazeIntegration.class.getName(), Context.MODE_PRIVATE)
+                .getSharedPreferences(BrazeEngineIntegration.class.getName(), Context.MODE_PRIVATE)
                 .edit()
                 .putInt(NUM_MAX_EVENTS_PER_CIRCUMSTANCE_KEY, numMaxEventsPerCircumstance)
                 .apply();
@@ -60,6 +60,6 @@ public class EngineBrazeIntegration {
             }
         }
 
-        FactualEngine.registerAction(EXPECTED_ACTION_ID, EngineBrazeBroadcastReceiver.class);
+        FactualEngine.registerAction(EXPECTED_ACTION_ID, BrazeEngineBroadcastReceiver.class);
     }
 }
