@@ -1,8 +1,6 @@
 package com.factual.engine.braze;
 
 import android.content.Context;
-import android.util.Log;
-
 import com.factual.FactualCircumstance;
 import com.factual.engine.FactualEngine;
 import com.factual.engine.api.FactualCircumstanceException;
