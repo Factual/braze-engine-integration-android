@@ -56,9 +56,9 @@ install {
                     artifactId artifact
                     version libraryVersion
 
-                    name 'EngineBraze'
+                    name 'BrazeEngine'
                     description 'Factual Engine and Braze SDK Integration'
-                    url 'https://github.com/Factual/engine-braze-integration-android'
+                    url 'https://github.com/Factual/braze-engine-integration-android'
                     licenses {
                         license {
                             name 'The MIT License (MIT)'

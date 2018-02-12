@@ -26,24 +26,24 @@ public class BrazeEngineIntegration {
      *     for each place which triggered the event. Based on the specificity of the circumstance expression there may be multiple
      *     places that concurrently trigger a circumstance.
      */
-    public static void initializeEngineBrazeIntegration(Context context) {
-        initializeEngineBrazeIntegration(context, true);
+    public static void initializeBrazeEngineIntegration(Context context) {
+        initializeBrazeEngineIntegration(context, true);
     }
 
 
     /**
-     * @see BrazeEngineIntegration#initializeEngineBrazeIntegration(Context)
+     * @see BrazeEngineIntegration#initializeBrazeEngineIntegration(Context)
      * @param enableUserJourney whether user journey events should trigger a Braze custom event
      */
-    public static void initializeEngineBrazeIntegration(Context context, boolean enableUserJourney) {
-        initializeEngineBrazeIntegration(context, enableUserJourney, NUM_MAX_EVENTS_PER_CIRCUMSTANCE_DEFAULT);
+    public static void initializeBrazeEngineIntegration(Context context, boolean enableUserJourney) {
+        initializeBrazeEngineIntegration(context, enableUserJourney, NUM_MAX_EVENTS_PER_CIRCUMSTANCE_DEFAULT);
     }
 
     /**
-     * @see BrazeEngineIntegration#initializeEngineBrazeIntegration(Context, boolean)
+     * @see BrazeEngineIntegration#initializeBrazeEngineIntegration(Context, boolean)
      * @param numMaxEventsPerCircumstance max number of custom braze events to push for each place that triggered a circumstance
      */
-    public static void initializeEngineBrazeIntegration(Context context, boolean enableUserJourney, int numMaxEventsPerCircumstance) {
+    public static void initializeBrazeEngineIntegration(Context context, boolean enableUserJourney, int numMaxEventsPerCircumstance) {
         context.getApplicationContext()
                 .getSharedPreferences(BrazeEngineIntegration.class.getName(), Context.MODE_PRIVATE)
                 .edit()
