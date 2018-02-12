@@ -34,7 +34,7 @@ ext {
     factualEngineVersion = "5.3.0"
     brazeVersion = "2.2.1"
     artifact = "braze-engine"
-    libraryVersion = "1.0.0-beta"
+    libraryVersion = "1.0.0"
 }
 
 dependencies {
