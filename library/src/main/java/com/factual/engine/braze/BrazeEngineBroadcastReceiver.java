@@ -2,6 +2,8 @@ package com.factual.engine.braze;
 
 import android.content.Context;
 import android.location.Location;
+import android.text.TextUtils;
+
 import com.appboy.Appboy;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.factual.engine.api.CircumstanceResponse;
@@ -68,7 +70,8 @@ public class BrazeEngineBroadcastReceiver extends FactualActionReceiver {
         properties.addProperty("longitude", place.getLongitude());
         properties.addProperty("user_latitude", userLocation.getLatitude());
         properties.addProperty("user_longitude", userLocation.getLongitude());
-        properties.addProperty("place_categories", place.getCategoryIds() == null ? "" : createCommaSeparatedCategoryIdsStr(place));
+        properties.addProperty("place_categories", place.getCategoryIds() == null
+                ? "" : TextUtils.join(",", place.getCategoryIds()));
         return properties;
     }
 
@@ -76,16 +79,5 @@ public class BrazeEngineBroadcastReceiver extends FactualActionReceiver {
         AppboyProperties properties = createPlaceAppBoyProperties(place, userLocation);
         properties.addProperty("incidence_id", incidenceId);
         return properties;
-    }
-
-    private String createCommaSeparatedCategoryIdsStr(FactualPlace place) {
-        String prefix = "";
-        StringBuilder strBuilder = new StringBuilder();
-        for (Integer categoryId: place.getCategoryIds()) {
-            strBuilder.append(prefix);
-            prefix = ",";
-            strBuilder.append(categoryId);
-        }
-        return strBuilder.toString();
     }
 }
