@@ -2,8 +2,8 @@
 
 This repository contains the code for an integration between Factual's Engine SDK and Braze SDK. 
 Using this integration library you can configure Factual's Engine SDK to send Braze custom events
-when the user is at a known factual place or an engine circumstance with actionId ```push-to-braze```
-is met. The following Braze custom events will be sent:
+when the user is at a known factual place or when an engine circumstance with the actionId ```push-to-braze```
+is met. The following is a description of the custom events sent to Braze: 
 
 ## User Journey Events
 
@@ -46,14 +46,13 @@ is met. The following Braze custom events will be sent:
 * place_categories (comma seperated factual category ids)
 
 ***Description***: Additional place related information about place at which the circumstance was met. 
-             Based on the specificity of the circumstance rule, it is possible that multiple places may
-             simultaneously trigger circumstance. We choose to not include all of the places within the 
+             Based on the specificity of the circumstance rule it is possible that multiple places may
+             simultaneously trigger the circumstance. We choose to not include all of the places within the 
              event properties of a single event to simplify the usage within the Braze dashboard. 
-             Instead, for each place that triggered the original circumstance, we send a slightly 
+             Instead, for each place that triggered the original circumstance we send a slightly 
              different custom event.
              
-***Note***: Given that we have multiple circumstance met events generated whenever an individual circumstance is triggered you
-can use the incidence_id property to map these related events. 
+***Note***: Use incidence_id to map the different Braze circumstance events to a single instance of an Engine circumstance met.
 
 # Installation
 
@@ -81,28 +80,21 @@ dependencies {
 
 # Usage
 
-To capture both user journey and circumstance met events add the following method call to the ```onStarted``` method of either your 
-implementation of ```FactualClientListener``` or ```FactualClientReceiver```:
-
 ```
-BrazeEngineIntegration.initializeBrazeEngineIntegration(androidApplicationContext);
-```
+//Whether user journey events should be sent to Braze
+boolean enableUserJourney = true;
 
-To capture only circumstance met events use the following code:
+/*
+Max number of "circumstance_met_at_place" that should be sent to user in case
+where multiple places simultaneously trigger the same circumstance. Default is
+set to 10.
+*/
+numMaxEventsPerCircumstance = 3; 
 
-```
-boolean enableUserJourney = false;
-BrazeEngineIntegration.initializeBrazeEngineIntegration(androidApplicationContext, enableUserJourney);
-```
 
-To limit the number of circumstance met at place events sent to Braze use the following method call:
-
-```
-boolean enableUserJourney = false;
-numMaxEventsPerCircumstance = 3; //note default is set to 10
 BrazeEngineIntegration.initializeBrazeEngineIntegration(androidApplicationContext, enableUserJourney, numMaxEventsPerCircumstance);
 ```
 
 # Demo App
 
-A demo app is included in this repository to demonstrate the usage of this library. [see here](https://github.com/Factual/braze-engine-integration-android/tree/master/library)
+A demo app is included in this repository to demonstrate the usage of this library. [see here](https://github.com/Factual/braze-engine-integration-android/tree/master/demo)
