@@ -4,7 +4,7 @@ This app demonstrates the usage of the Braze/Engine integration library.
 
 # Requirements
 
-Configure ``appboy.xml`` configuration file with correct Braze Android SDK API key and endpoint. [see here](https://github.com/Factual/braze-engine-integration-android/blob/master/demo/src/main/res/values/appboy.xml) 
+Configure ``appboy.xml`` configuration file with correct Braze Android SDK API key and endpoint. [see here](src/main/res/values/appboy.xml) 
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -14,7 +14,7 @@ Configure ``appboy.xml`` configuration file with correct Braze Android SDK API k
 </resources>
 ```
 
-Configure ```engine.xml``` configuration file with correct Engine SDK API Key. [see here](https://github.com/Factual/braze-engine-integration-android/blob/master/demo/src/main/res/values/engine.xml)
+Configure ```engine.xml``` configuration file with correct Engine SDK API Key. [see here](src/main/res/values/engine.xml)
 
 
 ```xml
