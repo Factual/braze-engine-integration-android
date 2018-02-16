@@ -97,4 +97,4 @@ BrazeEngineIntegration.initializeBrazeEngineIntegration(androidApplicationContex
 
 # Demo App
 
-A demo app is included in this repository to demonstrate the usage of this library. [see here](https://github.com/Factual/braze-engine-integration-android/tree/master/demo)
+A demo app is included in this repository to demonstrate the usage of this library. [see here](demo)
