@@ -36,9 +36,9 @@ public class BrazeEngineBroadcastReceiver extends FactualActionReceiver {
     }
 
     private void pushGeneralCircumstanceEvents(Appboy appboy, Context context, CircumstanceResponse response) {
-        String circumstanceId = response.getCircumstance().getCircumstanceId();
-        String circumstanceEventName = BrazeEngineIntegration.CIRCUMSTANCE_EVENT_NAME_PREFIX+circumstanceId;
-        String circumstancePlaceAtEventName = BrazeEngineIntegration.CIRCUMSTANCE_PLACE_AT_EVENT_NAME_PREFIX+circumstanceId;
+        String circName = response.getCircumstance().getName();
+        String circumstanceEventName = BrazeEngineIntegration.CIRCUMSTANCE_EVENT_NAME_PREFIX+circName;
+        String circumstancePlaceAtEventName = BrazeEngineIntegration.CIRCUMSTANCE_PLACE_AT_EVENT_NAME_PREFIX+circName;
         String incidenceId = UUID.randomUUID().toString();
         Location location = response.getLocation();
         List<FactualPlace> places = response.getAtPlaces();

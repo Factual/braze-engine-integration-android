@@ -69,7 +69,7 @@ repositories {
 ...
 
 dependencies {
-  compile 'com.factual.engine:braze-engine:1.0.0'
+  compile 'com.factual.engine:braze-engine:1.1.0'
 }
 ```
 

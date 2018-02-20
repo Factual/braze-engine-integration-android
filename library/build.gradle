@@ -31,10 +31,10 @@ repositories {
 }
 
 ext {
-    factualEngineVersion = "5.3.0"
+    factualEngineVersion = "5.6.0"
     brazeVersion = "2.2.1"
     artifact = "braze-engine"
-    libraryVersion = "1.0.0"
+    libraryVersion = "1.1.0"
 }
 
 dependencies {
