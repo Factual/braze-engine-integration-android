@@ -80,7 +80,7 @@ dependencies {
 
 # Usage
 
-```
+```java
 //Whether user journey events should be sent to Braze
 boolean enableUserJourney = true;
 
