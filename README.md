@@ -9,7 +9,7 @@ is met. The following is a description of the custom events sent to Braze:
 
 ***Name***: engine_user_journey
 
-***Descritpion***: User has visited a known factual palce
+***Description***: User has visited a known factual place
 
 ***Properties***: 
 * name (place name)
@@ -18,7 +18,7 @@ is met. The following is a description of the custom events sent to Braze:
 * longitude
 * user_latitude
 * user_longitude 
-* place_categories (comma seperated factual category ids)
+* place_categories (comma separated factual category ids)
 
 ## Circumstance Met Events
 
@@ -43,7 +43,7 @@ is met. The following is a description of the custom events sent to Braze:
 * longitude
 * user_latitude
 * user_longitude 
-* place_categories (comma seperated factual category ids)
+* place_categories (comma separated factual category ids)
 
 ***Description***: Additional place related information about place at which the circumstance was met. 
              Based on the specificity of the circumstance rule it is possible that multiple places may
