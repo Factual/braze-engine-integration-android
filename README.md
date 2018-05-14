@@ -56,7 +56,7 @@ is met. The following is a description of the custom events sent to Braze:
 
 # Installation
 
-The project artifacts are avaliable from Factual's bintray Maven repository. 
+The project artifacts are available from Factual's bintray Maven repository. 
 
 ```
 // repository for the Factual artifacts
