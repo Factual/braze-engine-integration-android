@@ -54,7 +54,7 @@ public class BrazeEngineIntegration {
     if (enableUserJourney) {
       try {
         FactualCircumstance userJourneyCircumstance =
-            new FactualCircumstance(USER_JOURNEY_CIRCUMSTANCE_ID, "(or (at any-factual-place) (near any-factual-place))", EXPECTED_ACTION_ID);
+            new FactualCircumstance(USER_JOURNEY_CIRCUMSTANCE_ID, "(at any-factual-place)", EXPECTED_ACTION_ID);
         FactualEngine.registerCircumstance(userJourneyCircumstance);
       } catch (FactualCircumstanceException e) {
         throw new RuntimeException(e);
