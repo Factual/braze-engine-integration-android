@@ -9,18 +9,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Impatient? Click to run circumstances."
+        android:text="Check the console for status updates."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/run_circumstances"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run Engine Circumstances"
-        tools:layout_editor_absoluteX="81dp"
-        tools:layout_editor_absoluteY="187dp" />
 
 </android.support.constraint.ConstraintLayout>
