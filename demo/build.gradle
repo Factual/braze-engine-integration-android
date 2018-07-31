@@ -3,8 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
 
-
-
     defaultConfig {
         applicationId "com.factual.engine.braze.helloworld"
         minSdkVersion 20
@@ -37,5 +35,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compile ('com.factual.engine:braze-engine:1.1.0')
+    implementation project(':library')
 }
