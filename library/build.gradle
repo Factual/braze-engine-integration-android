@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 27
@@ -32,7 +32,7 @@ ext {
     brazeVersion = "3.0.0"
     engineVersion = "[8.4.0,)"
     artifact = "braze-engine"
-    libraryVersion = "1.2.0"
+    libraryVersion = "1.3.0"
 }
 
 dependencies {
@@ -41,4 +41,51 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     api "com.factual:engine-sdk:${engineVersion}"
     api "com.appboy:android-sdk-base:${brazeVersion}"
+}
+
+// local repo
+install {
+  repositories {
+    mavenInstaller {
+      pom {
+        project {
+          groupId 'com.factual.engine'
+          artifactId artifact
+          version libraryVersion
+
+          name 'BrazeEngine'
+          description 'Factual Engine and Braze SDK Integration'
+          url 'https://github.com/Factual/braze-engine-integration-android'
+          licenses {
+            license {
+              name 'The MIT License (MIT)'
+              url 'http://opensource.org/licenses/MIT'
+              distribution 'repo'
+            }
+          }
+          developers {
+            developer {
+              id 'factual'
+              name 'Factual, Inc.'
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+uploadArchives {
+  repositories {
+    def deployRepoUrl = System.getenv('DEPLOY_REPO_URL') ?: ''
+    def deployRepoUser = System.getenv('DEPLOY_REPO_USER') ?: ''
+    def deployRepoPass = System.getenv('DEPLOY_REPO_PASS') ?: ''
+
+    mavenDeployer {
+      repository(url: deployRepoUrl) {
+        authentication(userName: deployRepoUser, password: deployRepoPass)
+      }
+      pom = install.repositories.mavenInstaller.pom
+    }
+  }
 }
