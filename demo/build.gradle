@@ -26,6 +26,13 @@ android {
     }
 }
 
+configurations {
+  all {
+    exclude module: 'httpclient'
+    exclude module: 'commons-logging'
+  }
+}
+
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
