@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string translatable="false" name="com_appboy_api_key">API-KEY</string>
-    <!--<string translatable="false" name="com_appboy_custom_endpoint">ENDPOINT</string>-->
-</resources>
