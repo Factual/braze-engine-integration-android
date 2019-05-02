@@ -28,4 +28,4 @@ If you'd like to test the integration, an example test is given. To run the test
 
 ### Explore
 
-From here you can setup a Braze Campaign to trigger actions based on Engine custom events. For example, see [here](https://github.com/Factual/engine-iterable-integration#example) for an example of sending a push notification for when a user visits a coffee shop
+From here you can setup a Braze Campaign to trigger actions based on Engine custom events. For example, see [here](https://github.com/Factual/engine-braze-integration#example) for an example of sending a push notification for when a user visits a coffee shop
