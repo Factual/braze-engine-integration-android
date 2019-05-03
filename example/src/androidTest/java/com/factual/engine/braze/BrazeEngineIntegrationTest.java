@@ -15,9 +15,11 @@ import com.factual.engine.api.FactualException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -39,10 +41,13 @@ import static org.junit.Assert.*;
 public class BrazeEngineIntegrationTest {
 
   // Keys used in Braze API
-  private static String usersKey = "users";
-  private static String customEventsKey = "custom_events";
-  private static String eventNameKey = "name";
-  private static String eventDateString = "last";
+  private static String API_KEY = "api_key";
+  private static String EMAIL_KEY = "email_address";
+  private static String ID_KEY = "external_id";
+  private static String USERS_KEY = "users";
+  private static String CUSTOM_EVENTS_KEY = "custom_events";
+  private static String EVENT_NAME_KEY = "name";
+  private static String EVENT_DATE_KEY = "last";
 
   /**
    * Setup Braze Engine
@@ -130,6 +135,12 @@ public class BrazeEngineIntegrationTest {
     verify(aboutToRun, events);
   }
 
+  /**
+   * Verifies the data was sent to Braze
+   *
+   * @param preRun Date right before sending data to Braze
+   * @param events Events to look for from braze
+   */
   private void verify(Date preRun, HashSet<String> events) {
     // Wait for Braze to track event
     delay(60);
@@ -142,19 +153,26 @@ public class BrazeEngineIntegrationTest {
       // Get Braze API data
       Response responses = client.newCall(request).execute();
       JSONObject jsonData = new JSONObject(responses.body().string());
+      // Get test user
+      JSONArray users = jsonData.getJSONArray(USERS_KEY);
+      JSONObject user = null;
+      for (int i = 0; i < users.length(); i++) {
+        JSONObject testUser = users.getJSONObject(i);
+        if (testUser.getString(ID_KEY).equals(StubConfiguration.BRAZE_TEST_USER_ID)) {
+          user = testUser;
+          break;
+        }
+      }
       // Get custom events
-      JSONArray customEvents = jsonData
-          .getJSONArray(usersKey)
-          .getJSONObject(0)
-          .getJSONArray(customEventsKey);
+      JSONArray customEvents = user.getJSONArray(CUSTOM_EVENTS_KEY);
       // Loop through each custom event
       for (int i = 0; i < customEvents.length(); i++) {
         JSONObject event = customEvents.getJSONObject(i);
-        String eventName = event.getString(eventNameKey);
+        String eventName = event.getString(EVENT_NAME_KEY);
         // Ensure this event is the one we sent
-        if (events.contains(event.getString(eventNameKey))) {
+        if (events.contains(event.getString(EVENT_NAME_KEY))) {
           // Get event date
-          String dateString = event.getString(eventDateString);
+          String dateString = event.getString(EVENT_DATE_KEY);
           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
           Date date = dateFormat.parse(dateString);
           // Ensure this is the event we just sent and not an old event
@@ -173,6 +191,11 @@ public class BrazeEngineIntegrationTest {
     }
   }
 
+  /**
+   * Waits for given number of seconds
+   *
+   * @param seconds Number of seconds to delay
+   */
   private void delay(int seconds) {
     try {
       Thread.sleep(seconds * 1000);
@@ -243,15 +266,17 @@ public class BrazeEngineIntegrationTest {
    * @return A Request object for getting data from Braze
    */
   private Request brazeApiRequest() {
-    String email = StubConfiguration.BRAZE_TEST_USER_EMAIL;
-    String apiKey = StubConfiguration.BRAZE_REST_API_KEY;
     String endpoint = StubConfiguration.BRAZE_REST_ENDPOINT;
-    String url = String.format("https://%s/users/export/ids?api_key=%s&email_address=%s",
-        endpoint,
-        apiKey,
-        email);
+    String url = String.format("https://%s/users/export/ids", endpoint);
 
-    RequestBody requestBody = new FormBody.Builder().build(); // maybe add params here?
+    HashMap<String, String> map = new HashMap<>();
+    map.put(API_KEY, StubConfiguration.BRAZE_REST_API_KEY);
+    map.put(EMAIL_KEY, StubConfiguration.BRAZE_TEST_USER_EMAIL);
+    JSONObject jsonObject = new JSONObject(map);
+    String json = jsonObject.toString();
+
+    MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    RequestBody requestBody = RequestBody.create(JSON, json);
 
     return new Request.Builder().url(url).post(requestBody).build();
   }
