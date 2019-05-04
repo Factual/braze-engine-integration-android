@@ -8,19 +8,19 @@
 
 ![Dashboard image](./images/dashboard.png)
 
-**(2)** Add Factual Location Engine API Key in [Configuration.java](src/main/java/com/factual/engine/braze/Configuration.java) where it says, `"Your Factual Location Engine API Key Here"`
+**(2)** Add Factual Location Engine API Key in [Configuration.java](src/main/java/com/factual/engine/braze/Configuration.java) where it says, `"Your Engine API Key here"`
 
 **(3)** Locate your Braze API Key for your app from the [Braze Dashboard](https://dashboard.braze.com) in **Developer Console** under the **APP SETTINGS** tab.  Go to **Identification** and use the API Key listed for your app.
 
-**(4)** Add your Braze SDK API Key to [appboy.xml](src/main/res/values/appboy.xml) where it says `"Your Braze SDK API Key here"`.
+**(4)** Add your Braze SDK API Key to [appboy.xml](src/main/res/values/appboy.xml) where it says `Your Braze SDK API Key here`.
 
-**(5)** Determine your [Braze Endpoint](https://www.braze.com/docs/user_guide/administrative/access_braze/sdk_endpoints/) and add it to [appboy.xml](src/main/res/values/appboy.xml) where it says `"Your Braze SDK Endpoint here"`
+**(5)** Determine your [Braze Endpoint](https://www.braze.com/docs/user_guide/administrative/access_braze/sdk_endpoints/) and add it to [appboy.xml](src/main/res/values/appboy.xml) where it says `Your Braze SDK Endpoint here`
 
 **(5)** In [Configuration.java](src/main/java/com/factual/engine/braze/Configuration.java) replace `"Your Braze User ID here"` and `"Your Braze User Email here"` to a test user id and user email which you can use to look up on Braze to ensure the data is being sent.
 
 ### Enable Push Notifications
 
-The example is setup to send a push notification using [Firebase](https://firebase.google.com/). The file [google-services.json](google-services.json) should be updated with you credentials and permissions.  [Click here](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/integration/) to view how to configure Braze's push notifications.  Add your Cloud Messaging Sender ID to [appboy.xml](src/main/res/values/appboy.xml) where it says `"Your Cloud Messaging Sender ID here"`.
+The example app is setup to send a push notification using [Firebase](https://firebase.google.com/). The file [google-services.json](google-services.json) should be updated with you credentials and permissions.  [Click here](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/integration/) to view how to configure Braze's push notifications.  Add your Cloud Messaging Sender ID to [appboy.xml](src/main/res/values/appboy.xml) where it says `Your Cloud Messaging Sender ID here`.
 
 ### Testing
 
