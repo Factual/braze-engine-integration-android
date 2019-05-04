@@ -20,9 +20,7 @@
 
 ### Enable Push Notifications
 
-The example is setup to send a push notification using [Firebase](https://firebase.google.com/). The file [google-services.json](google-services.json) should be updated with you credentials and permissions.  [Click here](https://www.braze.com/docs/developer_guide/platform_integration_guides/unity/android/push_notifications/) to view how to enable push notifications from Braze.
-
-Locate your Firebase Cloud Sender ID ([see here for help](https://stackoverflow.com/a/43292797/11133047)) and add it to [appboy.xml](src/main/res/values/appboy.xml) where it says `"Your Firebase Cloud Sender ID here"`.
+The example is setup to send a push notification using [Firebase](https://firebase.google.com/). The file [google-services.json](google-services.json) should be updated with you credentials and permissions.  [Click here](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/integration/) to view how to configure Braze's push notifications.  Add your Cloud Messaging Sender ID to [appboy.xml](src/main/res/values/appboy.xml) where it says `"Your Cloud Messaging Sender ID here"`.
 
 ### Testing
 

@@ -2,4 +2,8 @@
 <resources>
     <string name="com_appboy_api_key">Your Braze SDK API Key here</string>
     <string translatable="false" name="com_appboy_custom_endpoint">Your Braze SDK Endpoint here</string>
+    <string name="com_appboy_firebase_cloud_messaging_sender_id">Your Cloud Messaging Sender ID here</string>
+    <bool name="com_appboy_firebase_cloud_messaging_registration_enabled">true</bool>
+    <bool name="com_appboy_handle_push_deep_links_automatically">true</bool>
+    <bool name="com_appboy_push_notification_html_rendering_enabled">true</bool>
 </resources>

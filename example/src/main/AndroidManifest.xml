@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature android:name="android.hardware.location.network" />
@@ -18,19 +17,30 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-    <activity android:name="com.factual.engine.braze.MainActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+        <activity android:name="com.factual.engine.braze.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <service
           android:exported="false"
           android:name="com.factual.engine.FactualJobIntentService"
           android:permission="android.permission.BIND_JOB_SERVICE"/>
-    <receiver android:name="com.factual.engine.braze.ExampleFactualClientReceiver"/>
-    <receiver android:name="com.factual.engine.braze.BrazeEngineActionReceiver"/>
-    <receiver android:name="com.factual.engine.braze.BrazeEngineUserJourneyReceiver"/>
-</application>
 
+        <service android:name="com.appboy.AppboyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <receiver android:name="com.factual.engine.braze.ExampleFactualClientReceiver"/>
+        <receiver android:name="com.factual.engine.braze.BrazeEngineActionReceiver"/>
+        <receiver android:name="com.factual.engine.braze.BrazeEngineUserJourneyReceiver"/>
+        <receiver android:name="com.appboy.AppboyFcmReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+          <intent-filter>
+            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            <category android:name="com.factual.engine.braze" />
+          </intent-filter>
+        </receiver>
+      </application>
 </manifest>
