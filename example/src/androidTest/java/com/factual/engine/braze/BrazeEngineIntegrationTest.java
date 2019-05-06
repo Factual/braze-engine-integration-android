@@ -82,7 +82,7 @@ public class BrazeEngineIntegrationTest {
       appboy.getCurrentUser().setEmail(StubConfiguration.BRAZE_TEST_USER_EMAIL);
 
       // Start the integration
-      BrazeEngineIntegration.trackCircumstances(appContext, 0, 0);
+      BrazeEngineIntegration.trackCircumstances(appContext, 1, 0);
       BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
     }
   }
