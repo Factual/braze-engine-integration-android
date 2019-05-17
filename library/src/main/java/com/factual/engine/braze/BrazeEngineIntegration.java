@@ -2,7 +2,7 @@ package com.factual.engine.braze;
 
 import android.content.Context;
 
-import com.factual.FactualCircumstance;
+import com.factual.engine.api.FactualCircumstance;
 import com.factual.engine.FactualEngine;
 import com.factual.engine.api.FactualCircumstanceException;
 
