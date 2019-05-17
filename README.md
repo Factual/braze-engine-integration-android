@@ -1,9 +1,9 @@
 # Description
 
-This repository contains the code for an integration between Factual's Engine SDK and Braze SDK. 
+This repository contains the code for an integration between Factual's Engine SDK and Braze SDK.
 Using this integration library you can configure Factual's Engine SDK to send Braze custom events
 when the user is at a known factual place or when an engine circumstance with the actionId ```push-to-braze```
-is met. The following is a description of the custom events sent to Braze: 
+is met. The following is a description of the custom events sent to Braze:
 
 ## User Journey Events
 
@@ -11,13 +11,13 @@ is met. The following is a description of the custom events sent to Braze:
 
 ***Description***: User has visited a known factual place
 
-***Properties***: 
+***Properties***:
 * name (place name)
 * factual_id (factual unique identifier for place)
 * latitude
 * longitude
 * user_latitude
-* user_longitude 
+* user_longitude
 * place_categories (comma separated factual category ids)
 
 ## Circumstance Met Events
@@ -26,7 +26,7 @@ is met. The following is a description of the custom events sent to Braze:
 
 ***Description***: A circumstance with actionId ```push-to-braze``` has been met
 
-***Properties***: 
+***Properties***:
 * incidence_id
 * user_latitude
 * user_longitude
@@ -35,28 +35,28 @@ is met. The following is a description of the custom events sent to Braze:
 
 ***Name***: engine_circumstance_place_at_[CIRCUMSTANCE_NAME]
 
-***Properties***: 
+***Properties***:
 * incidence_id
 * name (place name)
 * factual_id (factual unique identifier for place)
 * latitude
 * longitude
 * user_latitude
-* user_longitude 
+* user_longitude
 * place_categories (comma separated factual category ids)
 
-***Description***: Additional place related information about place at which the circumstance was met. 
+***Description***: Additional place related information about place at which the circumstance was met.
              Based on the specificity of the circumstance rule it is possible that multiple places may
-             simultaneously trigger the circumstance. We choose to not include all of the places within the 
-             event properties of a single event to simplify the usage within the Braze dashboard. 
-             Instead, for each place that triggered the original circumstance we send a slightly 
+             simultaneously trigger the circumstance. We choose to not include all of the places within the
+             event properties of a single event to simplify the usage within the Braze dashboard.
+             Instead, for each place that triggered the original circumstance we send a slightly
              different custom event.
-             
+
 ***Note***: Use incidence_id to map the different Braze circumstance events to a single instance of an Engine circumstance met.
 
 # Installation
 
-The project artifacts are available from Factual's bintray Maven repository. 
+The project artifacts are available from Factual's bintray Maven repository.
 
 ```
 // repository for the Factual artifacts
@@ -69,7 +69,7 @@ repositories {
 ...
 
 dependencies {
-  compile 'com.factual.engine:braze-engine:1.3.0'
+  compile 'com.factual.engine:braze-engine:1.4.0'
 }
 ```
 
@@ -89,7 +89,7 @@ Max number of "circumstance_met_at_place" that should be sent to user in case
 where multiple places simultaneously trigger the same circumstance. Default is
 set to 10.
 */
-numMaxEventsPerCircumstance = 3; 
+numMaxEventsPerCircumstance = 3;
 
 
 BrazeEngineIntegration.initializeBrazeEngineIntegration(androidApplicationContext, enableUserJourney, numMaxEventsPerCircumstance);
