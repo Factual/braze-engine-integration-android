@@ -43,13 +43,13 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
     public void onStarted() {
         Log.i("engine", "Engine has started.");
         /*
-        Max number of "engine_circumstance_at_place" events that should be sent per "engine_circumstance_met"
+        Max number of "engine_at_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME
         event.Default is set to 10.
         */
         int numMaxAtPlaceEventsPerCircumstance = 3;
 
         /*
-        Max number of "engine_circumstance_near_place" events that should be sent per "engine_circumstance_met"
+        Max number of "engine_near_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME
         event.Default is set to 20.
         */
         int numMaxNearPlaceEventsPerCircumstance = 5;

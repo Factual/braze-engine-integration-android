@@ -108,8 +108,8 @@ public class BrazeEngineIntegrationTest {
     }
 
     HashSet<String> events = new HashSet<>();
-    events.add(String.format("engine_circumstance_%s", StubConfiguration.CIRCUMSTANCE_NAME));
-    events.add(String.format("engine_circumstance_at_place_%s", StubConfiguration.CIRCUMSTANCE_NAME));
+    events.add(String.format("engine_%s", StubConfiguration.CIRCUMSTANCE_NAME));
+    events.add(String.format("engine_at_%s", StubConfiguration.CIRCUMSTANCE_NAME));
 
     verify(aboutToRun, events);
   }

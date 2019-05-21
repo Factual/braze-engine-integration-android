@@ -7,13 +7,13 @@ import com.factual.engine.api.FactualCircumstanceException;
 
 public class BrazeEngineIntegration {
 
-  static final String EXPECTED_ACTION_ID = "send-custom-event";
+  static final String EXPECTED_ACTION_ID = "push-to-braze";
   static final int NUM_MAX_AT_PLACE_EVENTS_PER_CIRCUMSTANCE_DEFAULT = 10;
   static final int NUM_MAX_NEAR_PLACE_EVENTS_PER_CIRCUMSTANCE_DEFAULT = 20;
   static final int NUM_MAX_ATTACHED_PLACE_EVENTS_PER_SPAN_DEFAULT = 20;
-  static final String CIRCUMSTANCE_MET_EVENT = "engine_circumstance_";
-  static final String CIRCUMSTANCE_PLACE_AT_EVENT = "engine_circumstance_at_place_";
-  static final String CIRCUMSTANCE_PLACE_NEAR_EVENT = "engine_circumstance_near_place_";
+  static final String CIRCUMSTANCE_MET_EVENT = "engine_";
+  static final String CIRCUMSTANCE_PLACE_AT_EVENT = "engine_at_";
+  static final String CIRCUMSTANCE_PLACE_NEAR_EVENT = "engine_near_";
   static final String SPAN_EVENT = "engine_span";
   static final String SPAN_ATTACHED_PLACE = "engine_span_attached_place";
   static final String NUM_MAX_AT_PLACE_EVENTS_PER_CIRCUMSTANCE_KEY = "max_at_place_events_per_circumstance";

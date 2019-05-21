@@ -68,8 +68,8 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
     String spanId = span.getSpanId();
     boolean startTimestampUnavailable = span.isStartTimestampUnavailable();
     boolean endTimestampUnavailable = span.isEndTimestampUnavailable();
-    long startTimestamp = span.getStartTimestamp();
-    long endTimestamp = span.getEndTimestamp();
+    double startTimestamp = span.getStartTimestamp();
+    double endTimestamp = span.getEndTimestamp();
 
     // Initialize data
     FactualPlaceVisit currentPlace = span.getCurrentPlace();
@@ -110,7 +110,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
     }
 
     // Get duration of span in seconds
-    long duration = !startTimestampUnavailable && !endTimestampUnavailable ?
+    double duration = !startTimestampUnavailable && !endTimestampUnavailable ?
         (endTimestamp - startTimestamp) : 0;
 
     // Populate properties

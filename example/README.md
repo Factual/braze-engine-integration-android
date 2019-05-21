@@ -6,7 +6,7 @@
 
 **(1)** Locate your Factual Engine API Key from the [Factual Engine Dashboard](https://engine.factual.com/garage)
 
-![Dashboard image](./images/dashboard.png)
+![Dashboard image](./images/apikey.png)
 
 **(2)** Add Factual Location Engine API Key in [Configuration.java](src/main/java/com/factual/engine/braze/Configuration.java) where it says, `"Your Engine API Key here"`
 

@@ -14,14 +14,14 @@ import java.util.UUID;
 public class BrazeEngineActionReceiver extends FactualActionReceiver {
 
   // Key constants
-  static final String BRAZE_ENGINE_EVENT_KEY = "engine_circumstance_";
+  static final String BRAZE_ENGINE_EVENT_KEY = "engine_";
   static final String INCIDENT_ID_KEY = "incidence_id";
   static final String USER_LATITUDE_KEY = "user_latitude";
   static final String USER_LONGITUDE_KEY = "user_longitude";
   static final String EVENT_SOURCE_KEY = "event_source";
 
-  static final String AT_PLACE_EVENT_KEY = "engine_circumstance_at_place_";
-  static final String NEAR_PLACE_EVENT_KEY = "engine_circumstance_near_place_";
+  static final String AT_PLACE_EVENT_KEY = "engine_at_";
+  static final String NEAR_PLACE_EVENT_KEY = "engine_near_";
   static final String PLACE_NAME_KEY = "name";
   static final String FACTUAL_PLACE_ID_KEY = "factual_id";
   static final String PLACE_LATITUDE_KEY = "latitude";
