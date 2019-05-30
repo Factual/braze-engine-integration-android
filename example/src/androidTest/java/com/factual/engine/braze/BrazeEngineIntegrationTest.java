@@ -108,8 +108,8 @@ public class BrazeEngineIntegrationTest {
     }
 
     HashSet<String> events = new HashSet<>();
-    events.add(String.format("engine_%s", StubConfiguration.CIRCUMSTANCE_NAME));
-    events.add(String.format("engine_at_%s", StubConfiguration.CIRCUMSTANCE_NAME));
+    events.add(BrazeEngineIntegration.CIRCUMSTANCE_MET_EVENT + StubConfiguration.CIRCUMSTANCE_NAME);
+    events.add(BrazeEngineIntegration.CIRCUMSTANCE_PLACE_AT_EVENT + StubConfiguration.CIRCUMSTANCE_NAME);
 
     verify(aboutToRun, events);
   }
@@ -128,8 +128,8 @@ public class BrazeEngineIntegrationTest {
     receiver.handleUserJourneySpan(InstrumentationRegistry.getContext(), span);
 
     HashSet<String> events = new HashSet<>();
-    events.add("engine_span_occurred");
-    events.add("engine_span_attached_place");
+    events.add(BrazeEngineIntegration.SPAN_EVENT);
+    events.add(BrazeEngineIntegration.SPAN_ATTACHED_PLACE);
 
     verify(aboutToRun, events);
   }

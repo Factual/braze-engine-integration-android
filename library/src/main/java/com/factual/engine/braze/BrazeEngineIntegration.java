@@ -14,7 +14,7 @@ public class BrazeEngineIntegration {
   static final String CIRCUMSTANCE_MET_EVENT = "engine_";
   static final String CIRCUMSTANCE_PLACE_AT_EVENT = "engine_at_";
   static final String CIRCUMSTANCE_PLACE_NEAR_EVENT = "engine_near_";
-  static final String SPAN_EVENT = "engine_span";
+  static final String SPAN_EVENT = "engine_span_occurred";
   static final String SPAN_ATTACHED_PLACE = "engine_span_attached_place";
   static final String NUM_MAX_AT_PLACE_EVENTS_PER_CIRCUMSTANCE_KEY = "max_at_place_events_per_circumstance";
   static final String NUM_MAX_NEAR_PLACE_EVENTS_PER_CIRCUMSTANCE_KEY = "max_near_place_events_per_circumstance";
