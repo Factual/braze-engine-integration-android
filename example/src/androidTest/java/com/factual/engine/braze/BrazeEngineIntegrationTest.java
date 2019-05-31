@@ -91,7 +91,7 @@ public class BrazeEngineIntegrationTest {
    * Tests that Braze Engine Integration is detecting circumstances
    */
   @Test
-  public void testCircumstances() {
+  public void testBrazeEngineCircumstances() {
 
     // Give location to test
     Location location = new Location("test-location");
@@ -99,7 +99,7 @@ public class BrazeEngineIntegrationTest {
     location.setLongitude(StubConfiguration.TEST_LONGITUDE);
 
     Date aboutToRun = new Date();
-    delay(5);
+    delay(1);
 
     try {
       FactualEngine.runCircumstances(location);
@@ -118,10 +118,10 @@ public class BrazeEngineIntegrationTest {
    * Tests that Braze Engine Integration is detecting spans
    */
   @Test
-  public void testSpans() {
+  public void testBrazeEngineSpans() {
     UserJourneySpan span = createSpan();
     Date aboutToRun = new Date();
-    delay(5);
+    delay(1);
 
     // Push span
     BrazeEngineUserJourneyReceiver receiver = new BrazeEngineUserJourneyReceiver();
@@ -142,7 +142,7 @@ public class BrazeEngineIntegrationTest {
    */
   private void verify(Date preRun, HashSet<String> events) {
     // Wait for Braze to track event
-    delay(60);
+    delay(10);
 
     // Ensure data was sent to Braze
     OkHttpClient client = new OkHttpClient();
