@@ -7,7 +7,7 @@ import com.factual.engine.api.mobile_state.FactualPlaceVisit;
 import com.factual.engine.api.mobile_state.Geographies;
 import java.util.List;
 
-public class PlaceVisitData {
+class PlaceVisitData {
 
   private List<FactualPlace> places = null;
   private String localities = null;
