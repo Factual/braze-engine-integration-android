@@ -71,69 +71,35 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
     double startTimestamp = span.getStartTimestamp();
     double endTimestamp = span.getEndTimestamp();
 
-    // Initialize data
-    FactualPlaceVisit currentPlace = span.getCurrentPlace();
-    List<FactualPlace> places = null;
-    boolean isHome = false;
-    boolean isWork = false;
-    double ingressLatitude = -1;
-    double ingressLongitude = -1;
-    Geographies geographies;
-    String localities = null;
-    String country = null;
-    String postcode = null;
-    String region = null;
-
-    // Current place information
-    if (currentPlace != null) {
-      places = currentPlace.getAttachedPlaces();
-      isHome = currentPlace.isHome();
-      isWork = currentPlace.isWork();
-
-      // Ingress information
-      Location ingressLocation = currentPlace.getIngressLocation();
-      if (ingressLocation != null) {
-        ingressLatitude = ingressLocation.getLatitude();
-        ingressLongitude = ingressLocation.getLongitude();
-      }
-
-      // Geographies information
-      geographies = currentPlace.getGeographies();
-      if (geographies != null) {
-        country = geographies.getCountry();
-        String localitiesString = geographies.getLocalities().toString();
-        // Trim off open and closing bracket
-        localities = localitiesString.substring(1, localitiesString.length() - 1);
-        postcode = geographies.getPostcode();
-        region = geographies.getRegion();
-      }
-    }
-
     // Get duration of span in seconds
     double duration = !startTimestampUnavailable && !endTimestampUnavailable ?
         (endTimestamp - startTimestamp) : 0;
 
+    // Get current place data
+    PlaceVisitData currentPlace = new PlaceVisitData(span.getCurrentPlace());
+
     // Populate properties
-    properties.addProperty(SPAN_ID_KEY, spanId);
-    properties.addProperty(EVENT_SOURCE_KEY, sourceName);
-    properties.addProperty(START_TIME_UNAVAILABLE_KEY, startTimestampUnavailable);
-    properties.addProperty(END_TIME_UNAVAILABLE_KEY, endTimestampUnavailable);
-    properties.addProperty(START_TIMESTAMP_KEY, startTimestamp);
-    properties.addProperty(END_TIMESTAMP_KEY, endTimestamp);
-    properties.addProperty(DURATION_KEY, duration);
-    properties.addProperty(IS_HOME_KEY, isHome);
-    properties.addProperty(IS_WORK_KEY, isWork);
-    properties.addProperty(INGRESS_LATITUDE_KEY, ingressLatitude);
-    properties.addProperty(INGRESS_LONGITUDE_KEY, ingressLongitude);
-    properties.addProperty(COUNTRY_KEY, country);
-    properties.addProperty(LOCALITIES_KEY, localities);
-    properties.addProperty(POSTCODE_KEY, postcode);
-    properties.addProperty(REGION_KEY, region);
+    properties.addProperty(SPAN_ID_KEY, spanId)
+        .addProperty(EVENT_SOURCE_KEY, sourceName)
+        .addProperty(START_TIME_UNAVAILABLE_KEY, startTimestampUnavailable)
+        .addProperty(END_TIME_UNAVAILABLE_KEY, endTimestampUnavailable)
+        .addProperty(START_TIMESTAMP_KEY, startTimestamp)
+        .addProperty(END_TIMESTAMP_KEY, endTimestamp)
+        .addProperty(DURATION_KEY, duration)
+        .addProperty(COUNTRY_KEY, currentPlace.getCountry())
+        .addProperty(LOCALITIES_KEY, currentPlace.getLocalities())
+        .addProperty(POSTCODE_KEY, currentPlace.getPostcode())
+        .addProperty(REGION_KEY, currentPlace.getRegion())
+        .addProperty(INGRESS_LATITUDE_KEY, currentPlace.getIngressLatitude())
+        .addProperty(INGRESS_LONGITUDE_KEY, currentPlace.getIngressLongitude())
+        .addProperty(IS_HOME_KEY, currentPlace.isHome())
+        .addProperty(IS_WORK_KEY, currentPlace.isWork());
 
     // Send data to Braze
     appboy.logCustomEvent(BRAZE_ENGINE_SPAN_KEY, properties);
 
     // Get max number of places to send
+    List<FactualPlace> places = currentPlace.getPlaces();
     int numberOfPlaces = places == null ? 0 : places.size();
     int maxPlaceEvents = getMaxAttachedPlaceEvents(context, numberOfPlaces);
 
