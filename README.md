@@ -97,6 +97,8 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
 }
 ```
 
+Please refer to the [Factual Developer Docs](http://developer.factual.com) for more information about Engine.
+
 ## Example App
 
 An example app is included in this repository to demonstrate the usage of this library, see [./example](./example) for documentation and usage instructions.
