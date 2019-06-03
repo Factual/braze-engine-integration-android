@@ -22,10 +22,10 @@
 
 The example app is setup to send a push notification using [Firebase](https://firebase.google.com/). The file [google-services.json](google-services.json) should be updated with you credentials and permissions.  [Click here](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/integration/) to view how to configure Braze's push notifications.  Add your Cloud Messaging Sender ID to [appboy.xml](src/main/res/values/appboy.xml) where it says `Your Cloud Messaging Sender ID here`.
 
-### Testing
-
-If you'd like to test the integration, an example test is given. To run the test, fill out your information in [StubConfiguration.java](src/androidTest/java/com/factual/engine/braze/StubConfiguration.java). Change the `TEST_LATITUDE` and `TEST_LONGITUDE` variables to coordinates for a place which would trigger your engine circumstance.
-
 ### Explore
 
 From here you can setup a Braze Campaign to trigger actions based on Engine custom events. [See here](https://github.com/Factual/engine-braze-integration#example) for an example of sending a push notification for when a user is near a coffee shop.
+
+### Testing
+
+If you'd like to test the integration, an example test is given. To run the test, fill out your information in [StubConfiguration.java](src/androidTest/java/com/factual/engine/braze/StubConfiguration.java). Change the `TEST_LATITUDE` and `TEST_LONGITUDE` variables to coordinates for a place which would trigger your engine circumstance.
