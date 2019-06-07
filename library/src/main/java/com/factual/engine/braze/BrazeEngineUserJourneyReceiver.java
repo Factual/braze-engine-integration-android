@@ -1,12 +1,10 @@
 package com.factual.engine.braze;
 
 import android.content.Context;
-import android.location.Location;
+import android.text.TextUtils;
 import com.appboy.Appboy;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.factual.engine.api.FactualPlace;
-import com.factual.engine.api.mobile_state.FactualPlaceVisit;
-import com.factual.engine.api.mobile_state.Geographies;
 import com.factual.engine.api.mobile_state.UserJourneyEvent;
 import com.factual.engine.api.mobile_state.UserJourneyReceiver;
 import com.factual.engine.api.mobile_state.UserJourneySpan;
@@ -15,7 +13,7 @@ import java.util.List;
 public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
 
   // Key constants
-  static final String BRAZE_ENGINE_SPAN_KEY = "engine_span_occurred";
+  static final String ENGINE_SPAN_EVENT_KEY = "engine_span_occurred";
   static final String SPAN_ID_KEY = "span_id";
   static final String EVENT_SOURCE_KEY = "event_source";
 
@@ -35,9 +33,9 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
   static final String POSTCODE_KEY = "postcode";
   static final String REGION_KEY = "region";
 
-  static final String BRAZE_ENGINE_SPAN_ATTACHED_PLACE_KEY = "engine_span_attached_place";
+  static final String ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY = "engine_span_attached_place";
   static final String NAME_KEY = "name";
-  static final String FACTUAL_PLACE_ID_KEY = "factual_id";
+  static final String PLACE_ID_KEY = "factual_id";
   static final String LATITUDE_KEY = "latitude";
   static final String LONGITUDE_KEY = "longitude";
   static final String CATEGORIES_KEY = "category_labels";
@@ -96,7 +94,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
         .addProperty(IS_WORK_KEY, currentPlace.isWork());
 
     // Send data to Braze
-    appboy.logCustomEvent(BRAZE_ENGINE_SPAN_KEY, properties);
+    appboy.logCustomEvent(ENGINE_SPAN_EVENT_KEY, properties);
 
     // Get max number of places to send
     List<FactualPlace> places = currentPlace.getPlaces();
@@ -121,9 +119,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
       FactualPlace place = places.get(index);
 
       // Add categories
-      String categoriesString = PlaceCategoryMap.getPlaceCategories(place).toString();
-      // Trim off open and closing bracket
-      String categories = categoriesString.substring(1, categoriesString.length() - 1);
+      String categories = TextUtils.join(", ", PlaceCategoryMap.getPlaceCategories(place));
 
       // Add chain
       String chain = PlaceChainMap.getChain(place);
@@ -140,7 +136,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
       properties.addProperty(NAME_KEY, place.getName());
       properties.addProperty(CATEGORIES_KEY, categories);
       properties.addProperty(CHAIN_KEY, chain);
-      properties.addProperty(FACTUAL_PLACE_ID_KEY, id);
+      properties.addProperty(PLACE_ID_KEY, id);
       properties.addProperty(LATITUDE_KEY, latitude);
       properties.addProperty(LONGITUDE_KEY, longitude);
       properties.addProperty(DISTANCE_KEY, distance);
@@ -150,7 +146,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
       properties.addProperty(POSTCODE_KEY, postcode);
 
       // Send data to Braze
-      appboy.logCustomEvent(BRAZE_ENGINE_SPAN_ATTACHED_PLACE_KEY, properties);
+      appboy.logCustomEvent(ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY, properties);
     }
   }
 

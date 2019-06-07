@@ -29,7 +29,7 @@ repositories {
 
 ext {
     brazeVersion = "[3.0.0,)"
-    engineVersion = "[9.6.0,10.0.0["
+    engineVersion = "[10.0.0,)"
     artifact = "braze-engine"
     libraryVersion = "2.0.0"
 }

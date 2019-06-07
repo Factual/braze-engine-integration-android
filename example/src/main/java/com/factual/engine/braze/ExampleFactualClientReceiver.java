@@ -2,18 +2,18 @@ package com.factual.engine.braze;
 
 import android.util.Log;
 import com.factual.engine.FactualClientReceiver;
+import com.factual.engine.api.CircumstanceResponse;
 import com.factual.engine.api.FactualCircumstance;
 import com.factual.engine.api.FactualConfigMetadata;
 import com.factual.engine.api.FactualError;
 import com.factual.engine.api.FactualInfo;
+import java.util.List;
 
 public class ExampleFactualClientReceiver extends FactualClientReceiver {
 
   @Override
   public void onStarted() {
     Log.i("engine", "Engine has started.");
-
-    BrazeEngineIntegration.trackCircumstances(getContext().getApplicationContext());
     BrazeEngineIntegration.trackUserJourneySpans(getContext().getApplicationContext());
   }
 
@@ -52,5 +52,14 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
   @Override
   public void onDiagnosticMessage(String diagnosticMessage) {
     Log.i("engine", diagnosticMessage);
+  }
+
+  @Override
+  public void onCircumstancesMet(List<CircumstanceResponse> responses) {
+    for (CircumstanceResponse response : responses) {
+      if (response.getCircumstance().getActionId().equals("push-to-braze")) {
+        BrazeEngineIntegration.pushToBraze(getContext().getApplicationContext(), response);
+      }
+    }
   }
 }

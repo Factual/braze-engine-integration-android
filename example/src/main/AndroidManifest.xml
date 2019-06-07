@@ -34,7 +34,6 @@
             </intent-filter>
         </service>
         <receiver android:name="com.factual.engine.braze.ExampleFactualClientReceiver"/>
-        <receiver android:name="com.factual.engine.braze.BrazeEngineActionReceiver"/>
         <receiver android:name="com.factual.engine.braze.BrazeEngineUserJourneyReceiver"/>
         <receiver android:name="com.appboy.AppboyFcmReceiver" android:permission="com.google.android.c2dm.permission.SEND">
           <intent-filter>

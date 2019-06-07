@@ -6,12 +6,13 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.appboy.Appboy;
-import com.factual.engine.FactualEngine;
+import com.factual.engine.api.CircumstanceResponse;
+import com.factual.engine.api.FactualCircumstance;
 import com.factual.engine.api.FactualPlace;
+import com.factual.engine.api.PlaceConfidenceThreshold;
 import com.factual.engine.api.mobile_state.FactualActivityType;
 import com.factual.engine.api.mobile_state.FactualPlaceVisit;
 import com.factual.engine.api.mobile_state.UserJourneySpan;
-import com.factual.engine.api.FactualException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,43 +49,22 @@ public class BrazeEngineIntegrationTest {
   private static String EVENT_NAME_KEY = "name";
   private static String EVENT_DATE_KEY = "last";
 
+  private Context appContext;
+
   /**
    * Setup Braze Engine
    */
   @Before
   public void setUp() {
-    // Ensure Engine has not been initialized yet
-    if (!FactualEngine.isEngineStarted()) {
-      // Context of the app under test.
-      Context appContext = InstrumentationRegistry.getTargetContext();
+    appContext = InstrumentationRegistry.getTargetContext();
 
-      // Setup Engine
-      try {
-        FactualEngine.initialize(appContext, StubConfiguration.ENGINE_API_KEY);
-        FactualEngine.setReceiver(StubFactualClientReceiver.class);
-        FactualEngine.start();
-      } catch (FactualException e) {
-        fail("Could not start Factual Engine because of exception: " + e.getMessage());
-      }
+    // Configure Braze
+    Appboy appboy = Appboy.getInstance(appContext);
+    appboy.changeUser(StubConfiguration.BRAZE_TEST_USER_ID);
+    appboy.getCurrentUser().setEmail(StubConfiguration.BRAZE_TEST_USER_EMAIL);
 
-      // Wait for Engine to start
-      synchronized (StubFactualClientReceiver.lock) {
-        try {
-          StubFactualClientReceiver.lock.wait(30000);
-        } catch (InterruptedException ex) {
-          fail("Engine was initialized, but never started");
-        }
-      }
-
-      // Configure Braze
-      Appboy appboy = Appboy.getInstance(appContext);
-      appboy.changeUser(StubConfiguration.BRAZE_TEST_USER_ID);
-      appboy.getCurrentUser().setEmail(StubConfiguration.BRAZE_TEST_USER_EMAIL);
-
-      // Start the integration
-      BrazeEngineIntegration.trackCircumstances(appContext, 1, 0);
-      BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
-    }
+    // Start the integration
+    BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
   }
 
   /**
@@ -101,15 +81,11 @@ public class BrazeEngineIntegrationTest {
     Date aboutToRun = new Date();
     delay(1);
 
-    try {
-      FactualEngine.runCircumstances(location);
-    } catch (Exception e) {
-      fail("Could not run circumstance because error: " + e.getMessage());
-    }
+    BrazeEngineIntegration.pushToBraze(appContext, createCircumstance());
 
     HashSet<String> events = new HashSet<>();
-    events.add(BrazeEngineIntegration.CIRCUMSTANCE_MET_EVENT + StubConfiguration.CIRCUMSTANCE_NAME);
-    events.add(BrazeEngineIntegration.CIRCUMSTANCE_PLACE_AT_EVENT + StubConfiguration.CIRCUMSTANCE_NAME);
+    events.add(BrazeEngineIntegration.CIRCUMSTANCE_MET_EVENT_KEY + StubConfiguration.CIRCUMSTANCE_NAME);
+    events.add(BrazeEngineIntegration.AT_PLACE_EVENT_KEY + StubConfiguration.CIRCUMSTANCE_NAME);
 
     verify(aboutToRun, events);
   }
@@ -125,11 +101,11 @@ public class BrazeEngineIntegrationTest {
 
     // Push span
     BrazeEngineUserJourneyReceiver receiver = new BrazeEngineUserJourneyReceiver();
-    receiver.handleUserJourneySpan(InstrumentationRegistry.getContext(), span);
+    receiver.handleUserJourneySpan(appContext, span);
 
     HashSet<String> events = new HashSet<>();
-    events.add(BrazeEngineIntegration.SPAN_EVENT);
-    events.add(BrazeEngineIntegration.SPAN_ATTACHED_PLACE);
+    events.add(BrazeEngineUserJourneyReceiver.ENGINE_SPAN_EVENT_KEY);
+    events.add(BrazeEngineUserJourneyReceiver.ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY);
 
     verify(aboutToRun, events);
   }
@@ -175,6 +151,7 @@ public class BrazeEngineIntegrationTest {
           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
           Date date = dateFormat.parse(dateString);
           // Ensure this is the event we just sent and not an old event
+
           Assert.assertTrue(String.format("Braze did not receive event: %s", eventName),
               preRun.before(date));
           events.remove(eventName);
@@ -204,6 +181,45 @@ public class BrazeEngineIntegrationTest {
   }
 
   /**
+   * Creates a unique circumstance response to be tested.
+   *
+   * @return A unique Circumstance Response object to be tested
+   */
+  private CircumstanceResponse createCircumstance() {
+    String circumstanceId = "test-circumstance";
+    String circumstanceExpression = "(at any-factual-place)";
+    String actionId = "push-to-braze";
+    String circumstanceName = StubConfiguration.CIRCUMSTANCE_NAME;
+    FactualCircumstance circumstance = new FactualCircumstance(
+        circumstanceId,
+        circumstanceExpression,
+        actionId,
+        circumstanceName);
+    String placeName = "test-place";
+    String factualPlaceId = "test-id-123";
+    double distance = 0.0;
+    double latitude = 0.0;
+    double longitude = 0.0;
+    FactualPlace testAtPlace = new FactualPlace(
+        placeName,
+        factualPlaceId,
+        distance,
+        latitude,
+        longitude,
+        PlaceConfidenceThreshold.HIGH);
+    List<FactualPlace> testAtPlaces = new ArrayList<>();
+    testAtPlaces.add(testAtPlace);
+    List<FactualPlace> testNearPlaces = new ArrayList<>();
+    Location location = new Location("test-location");
+
+    return new CircumstanceResponse(
+        circumstance,
+        testAtPlaces,
+        testNearPlaces,
+        location);
+  }
+
+  /**
    * Creates a unique span to be tested. The unique values are the startTimestamp and endTimestamp
    * (creating a unique duration), id, distance, latitude, and longitude.
    *
@@ -227,7 +243,7 @@ public class BrazeEngineIntegrationTest {
     try {
       placeObject.put(BrazeEngineUserJourneyReceiver.NAME_KEY,
           "Angel Stadium of Anaheim")
-          .put(BrazeEngineUserJourneyReceiver.FACTUAL_PLACE_ID_KEY, "test-id")
+          .put(BrazeEngineUserJourneyReceiver.PLACE_ID_KEY, "test-id")
           .put(BrazeEngineUserJourneyReceiver.CATEGORIES_KEY, categoryArray)
           .put(BrazeEngineUserJourneyReceiver.DISTANCE_KEY, -1)
           .put(BrazeEngineUserJourneyReceiver.LATITUDE_KEY, location.getLatitude())
@@ -248,7 +264,8 @@ public class BrazeEngineIntegrationTest {
         false,
         false);
 
-    return new UserJourneySpan("this-is-a-test",
+    return new UserJourneySpan(
+        "this-is-a-test",
         startTimestamp,
         false,
         endTimestamp,
