@@ -2,6 +2,7 @@ package com.factual.engine.braze;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import com.appboy.Appboy;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.factual.engine.api.FactualPlace;
@@ -94,64 +95,56 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
         .addProperty(IS_WORK_KEY, currentPlace.isWork());
 
     // Send data to Braze
+    Log.i(BrazeEngineIntegration.TAG, "Sending user journey span event to braze");
     appboy.logCustomEvent(ENGINE_SPAN_EVENT_KEY, properties);
 
-    // Get max number of places to send
+    // Get number of attached places to send
     List<FactualPlace> places = currentPlace.getPlaces();
     int numberOfPlaces = places == null ? 0 : places.size();
-    int maxPlaceEvents = getMaxAttachedPlaceEvents(context, numberOfPlaces);
+    int numPlaceEvents = getNumPlaceEvents(context, numberOfPlaces);
 
-    if (maxPlaceEvents > 0 && places != null) {
-      // Send attached places data
-      sendPlacesData(places, spanId, maxPlaceEvents, appboy);
+    // Send attached places data if there are any to send
+    if (numPlaceEvents > 0 && places != null) {
+      Log.i(BrazeEngineIntegration.TAG,
+          String.format("Sending %d attached place event(s) to braze", numPlaceEvents));
+      sendPlacesData(places, spanId, appboy, numPlaceEvents);
     }
   }
 
   // Sends attached places data to Braze
-  private void sendPlacesData(List<FactualPlace> places, String spanId, int maxPlaceEvents,
-      Appboy appboy) {
+  private void sendPlacesData(List<FactualPlace> places, String spanId, Appboy appboy, int numPlaceEvents) {
     AppboyProperties properties = new AppboyProperties();
     properties.addProperty(EVENT_SOURCE_KEY, sourceName);
     properties.addProperty(SPAN_ID_KEY, spanId);
 
     // Loop through attached places
-    for (int index = 0; index < maxPlaceEvents; index++) {
+    for (int index = 0; index < numPlaceEvents; index++) {
       FactualPlace place = places.get(index);
 
-      // Add categories
+      // Get place data
       String categories = TextUtils.join(", ", PlaceCategoryMap.getPlaceCategories(place));
-
-      // Add chain
       String chain = PlaceChainMap.getChain(place);
 
-      String id = place.getFactualId();
-      double latitude = place.getLatitude();
-      double longitude = place.getLongitude();
-      double distance = place.getDistance();
-      String locality = place.getLocality();
-      String region = place.getRegion();
-      String country = place.getCountry();
-      String postcode = place.getPostcode();
-
+      // Add properties
       properties.addProperty(NAME_KEY, place.getName());
       properties.addProperty(CATEGORIES_KEY, categories);
       properties.addProperty(CHAIN_KEY, chain);
-      properties.addProperty(PLACE_ID_KEY, id);
-      properties.addProperty(LATITUDE_KEY, latitude);
-      properties.addProperty(LONGITUDE_KEY, longitude);
-      properties.addProperty(DISTANCE_KEY, distance);
-      properties.addProperty(LOCALITY_KEY, locality);
-      properties.addProperty(REGION_KEY, region);
-      properties.addProperty(COUNTRY_KEY, country);
-      properties.addProperty(POSTCODE_KEY, postcode);
+      properties.addProperty(PLACE_ID_KEY, place.getFactualId());
+      properties.addProperty(LATITUDE_KEY, place.getLatitude());
+      properties.addProperty(LONGITUDE_KEY, place.getLongitude());
+      properties.addProperty(DISTANCE_KEY, place.getDistance());
+      properties.addProperty(LOCALITY_KEY, place.getLocality());
+      properties.addProperty(REGION_KEY, place.getRegion());
+      properties.addProperty(COUNTRY_KEY, place.getCountry());
+      properties.addProperty(POSTCODE_KEY, place.getPostcode());
 
-      // Send data to Braze
+      // Push custom event to braze
       appboy.logCustomEvent(ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY, properties);
     }
   }
 
-  // Gets max attached place events allowed to be sent
-  private static int getMaxAttachedPlaceEvents(Context context, Integer numAttachedPlaces) {
+  // Gets number of attached places to send
+  private static int getNumPlaceEvents(Context context, Integer numAvailableAttachedPlaces) {
     int maxAtPlaceEventsPerCircumstance = context
         .getSharedPreferences(BrazeEngineIntegration.class.getName(),
             Context.MODE_PRIVATE)
@@ -160,6 +153,6 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
             BrazeEngineIntegration.NUM_MAX_ATTACHED_PLACE_EVENTS_PER_SPAN_DEFAULT
         );
 
-    return Math.min(maxAtPlaceEventsPerCircumstance, numAttachedPlaces);
+    return Math.min(maxAtPlaceEventsPerCircumstance, numAvailableAttachedPlaces);
   }
 }

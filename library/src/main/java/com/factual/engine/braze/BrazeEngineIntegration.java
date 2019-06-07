@@ -3,6 +3,7 @@ package com.factual.engine.braze;
 import android.content.Context;
 
 import android.text.TextUtils;
+import android.util.Log;
 import com.appboy.Appboy;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.factual.engine.api.CircumstanceResponse;
@@ -12,7 +13,13 @@ import java.util.UUID;
 
 public class BrazeEngineIntegration {
 
-  // Constants
+  private static Boolean trackingSpans = false;
+
+  // Constants & keys
+  private static final String sourceName = "factual";
+
+  static final String TAG = "BrazeEngine";
+
   static final int NUM_MAX_AT_PLACE_EVENTS_PER_CIRCUMSTANCE_DEFAULT = 10;
   static final int NUM_MAX_NEAR_PLACE_EVENTS_PER_CIRCUMSTANCE_DEFAULT = 20;
   static final int NUM_MAX_ATTACHED_PLACE_EVENTS_PER_SPAN_DEFAULT = 20;
@@ -35,10 +42,6 @@ public class BrazeEngineIntegration {
   static final String PLACE_LONGITUDE_KEY = "longitude";
   static final String PLACE_CATEGORIES_KEY = "category_labels";
   static final String PLACE_CHAIN_KEY = "chain_name";
-
-  private final static String sourceName = "factual";
-
-  private static Boolean trackingSpans = false;
 
   /**
    * <b>WARNING: Braze must be initialized prior to executing this method. </b>
@@ -114,6 +117,7 @@ public class BrazeEngineIntegration {
     properties.addProperty(EVENT_SOURCE_KEY, sourceName);
 
     // Push custom event to braze
+    Log.i(TAG, String.format("Sending circumstance %s event to braze", circumstanceName));
     String circumstanceEventName = CIRCUMSTANCE_MET_EVENT_KEY + circumstanceName;
     appboy.logCustomEvent(circumstanceEventName, properties);
 
@@ -121,6 +125,7 @@ public class BrazeEngineIntegration {
     List<FactualPlace> atPlaces = response.getAtPlaces();
     int numAtPlaceEvents = Math.min(maxAtPlaceEvents, atPlaces.size());
     if (numAtPlaceEvents > 0) {
+      Log.i(TAG, String.format("Sending %d at place event(s) to braze", numAtPlaceEvents));
       String atPlaceEventName = AT_PLACE_EVENT_KEY + circumstanceName;
       sendPlacesData(atPlaces, atPlaceEventName, numAtPlaceEvents, appboy, properties);
     }
@@ -128,6 +133,7 @@ public class BrazeEngineIntegration {
     List<FactualPlace> nearPlaces = response.getNearPlaces();
     int numNearPlaceEvents = Math.min(maxNearPlaceEvents, nearPlaces.size());
     if (numNearPlaceEvents > 0) {
+      Log.i(TAG, String.format("Sending %d near place event(s) to braze", numNearPlaceEvents));
       String nearPlaceEventName = NEAR_PLACE_EVENT_KEY + circumstanceName;
       sendPlacesData(nearPlaces, nearPlaceEventName, numNearPlaceEvents, appboy, properties);
     }
@@ -139,6 +145,7 @@ public class BrazeEngineIntegration {
       int maxPlaceEvents,
       Appboy appboy,
       AppboyProperties properties) {
+
     // Loop through each place
     for (int index = 0; index < maxPlaceEvents; index++) {
       FactualPlace place = places.get(index);
@@ -202,6 +209,7 @@ public class BrazeEngineIntegration {
         .apply();
 
     // Start sending user journey spans to Braze
+    Log.i(TAG, "Enabling Braze -> Engine span logging");
     BrazeEngineIntegration.trackingSpans = true;
   }
 
@@ -209,6 +217,7 @@ public class BrazeEngineIntegration {
    * Disables Braze Engine's User Journey Span tracking
    */
   public static void stopTrackingUserJourneySpans() {
+    Log.i(TAG, "Disabling Braze -> Engine span logging");
     BrazeEngineIntegration.trackingSpans = false;
   }
 
