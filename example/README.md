@@ -28,4 +28,4 @@ From here you can setup a Braze Campaign to trigger actions based on Engine cust
 
 ### Testing
 
-If you'd like to test the integration, an example test is given. To run the test, fill out your information in [StubConfiguration.java](https://github.com/Factual/engine-braze-integration-android/tree/master/example/src/androidTest/java/com/factual/engine/braze/StubConfiguration.java). Change the `TEST_LATITUDE` and `TEST_LONGITUDE` variables to coordinates for a place which would trigger your engine circumstance.
+If you'd like to test the integration, an example test is given. To run the test, fill out your information in [StubConfiguration.java](https://github.com/Factual/engine-braze-integration-android/tree/master/example/src/androidTest/java/com/factual/engine/braze/StubConfiguration.java).

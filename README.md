@@ -34,33 +34,36 @@ dependencies {
 
 ### Tracking Factual Engine Circumstances
 
-Start tracking Factual Engine circumstances by calling `BrazeEngineIntegration.trackCircumstances()` in the `onStarted()` method of `FactualClientReceiver`.
+Start tracking Factual Engine circumstances by calling ` BrazeEngineIntegration.pushToBraze()` in the `onCircumstancesMet()` callback of `FactualClientReceiver`.
 
 ```java
 public class ExampleFactualClientReceiver extends FactualClientReceiver {
 
     @Override
-    public void onStarted() {
-        Log.i("engine", "Engine has started.");
-        /*
-        Max number of "engine_at_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME
-        event.Default is set to 10.
-        */
-        int numMaxAtPlaceEventsPerCircumstance = 3;
+    public void onCircumstancesMet(List<CircumstanceResponse> responses) {
+      for (CircumstanceResponse response : responses) {
+      /*
+      Max number of "engine_at_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME.
+      Default is set to 10.
+      */
+      int maxAtPlaceEvents = 3
 
-        /*
-        Max number of "engine_near_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME
-        event.Default is set to 20.
-        */
-        int numMaxNearPlaceEventsPerCircumstance = 5;
+      /*
+      Max number of "engine_near_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME.
+      Default is set to 20.
+      */
+      int maxNearPlaceEvents = 5;
 
-        /* Start tracking circumstances */
-        BrazeEngineIntegration.trackCircumstances(getContext().getApplicationContext(),
-                                                  numMaxAtPlaceEventsPerCircumstance,
-                                                  numMaxNearPlaceEventsPerCircumstance);
+      /* Send circumstance event to  braze */
+      BrazeEngineIntegration.pushToBraze(getContext().getApplicationContext(),
+            response,
+            maxAtPlaceEvents,
+            maxNearPlaceEvents);
     }
+  }
 
-    ...
+  ...
+
 }
 ```
 
@@ -79,19 +82,19 @@ Then call `BrazeEngineIntegration.trackUserJourneySpans()` in the `onStarted()` 
 
 ```java
 public class ExampleFactualClientReceiver extends FactualClientReceiver {
+  @Override
+  public void onStarted() {
+    Log.i("engine", "Engine has started.");
+    /*
+    Max number of "engine_span_attached_place" events that should be sent per
+    "engine_span_occurred". Default is set to 20.
+    */
+    int maxAttachedPlaceEventsPerSpan = 10;
 
-    @Override
-    public void onStarted() {
-        Log.i("engine", "Engine has started.");
-        /*
-        Max number of "engine_span_attached_place" events that should be sent per "engine_span_occurred"
-        event.Default is set to 20.
-        */
-        int numMaxAttachedPlaceEventsPerSpan = 10;
-
-        /* Start tracking spans */
-        BrazeEngineIntegration.trackUserJourneySpans(getContext().getApplicationContext(), numMaxAttachedPlaceEventsPerSpan);
-    }
+    /* Start tracking spans */
+    BrazeEngineIntegration.trackUserJourneySpans(getContext().getApplicationContext(),
+        maxAttachedPlaceEventsPerSpan);
+}
 
     ...
 }

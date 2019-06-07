@@ -72,21 +72,20 @@ public class BrazeEngineIntegrationTest {
    */
   @Test
   public void testBrazeEngineCircumstances() {
-
-    // Give location to test
-    Location location = new Location("test-location");
-    location.setLatitude(StubConfiguration.TEST_LATITUDE);
-    location.setLongitude(StubConfiguration.TEST_LONGITUDE);
-
+    // Get date and time right before pushing circumstance event to braze
     Date aboutToRun = new Date();
     delay(1);
 
+    // push a circumstance event to braze
     BrazeEngineIntegration.pushToBraze(appContext, createCircumstance());
 
+    // Get events we are expecting to send to braze
     HashSet<String> events = new HashSet<>();
-    events.add(BrazeEngineIntegration.CIRCUMSTANCE_MET_EVENT_KEY + StubConfiguration.CIRCUMSTANCE_NAME);
+    events.add(BrazeEngineIntegration.CIRCUMSTANCE_MET_EVENT_KEY
+        + StubConfiguration.CIRCUMSTANCE_NAME);
     events.add(BrazeEngineIntegration.AT_PLACE_EVENT_KEY + StubConfiguration.CIRCUMSTANCE_NAME);
 
+    // Verify that events made it to braze
     verify(aboutToRun, events);
   }
 
@@ -95,18 +94,21 @@ public class BrazeEngineIntegrationTest {
    */
   @Test
   public void testBrazeEngineSpans() {
+    // Get date and time right before pushing span event to braze
     UserJourneySpan span = createSpan();
     Date aboutToRun = new Date();
     delay(1);
 
-    // Push span
+    // Push span event to braze
     BrazeEngineUserJourneyReceiver receiver = new BrazeEngineUserJourneyReceiver();
     receiver.handleUserJourneySpan(appContext, span);
 
+    // Get events we are expecting to send to braze
     HashSet<String> events = new HashSet<>();
     events.add(BrazeEngineUserJourneyReceiver.ENGINE_SPAN_EVENT_KEY);
     events.add(BrazeEngineUserJourneyReceiver.ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY);
 
+    // Verify that events made it to braze
     verify(aboutToRun, events);
   }
 
