@@ -77,7 +77,7 @@ public class BrazeEngineIntegrationTest {
     delay(1);
 
     // push a circumstance event to braze
-    BrazeEngineIntegration.pushToBraze(appContext, createCircumstance());
+    BrazeEngineIntegration.pushToBraze(appContext, createCircumstance(), 1, 0);
 
     // Get events we are expecting to send to braze
     HashSet<String> events = new HashSet<>();
