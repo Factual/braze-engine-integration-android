@@ -105,8 +105,8 @@ public class BrazeEngineIntegrationTest {
 
     // Get events we are expecting to send to braze
     HashSet<String> events = new HashSet<>();
-    events.add(BrazeEngineUserJourneyReceiver.ENGINE_SPAN_EVENT_KEY);
-    events.add(BrazeEngineUserJourneyReceiver.ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY);
+    events.add(BrazeEngineIntegration.ENGINE_SPAN_EVENT_KEY);
+    events.add(BrazeEngineIntegration.ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY);
 
     // Verify that events made it to braze
     verify(aboutToRun, events);
