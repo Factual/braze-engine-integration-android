@@ -20,7 +20,7 @@
 
 ### Enable Push Notifications
 
-The example app is setup to send a push notification using [Firebase](https://firebase.google.com/). The file [google-services.json](https://github.com/Factual/engine-braze-integration-android/tree/master/example/google-services.json) should be updated with you credentials and permissions.  [Click here](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/integration/) to view how to configure Braze's push notifications.  Add your Cloud Messaging Sender ID to [appboy.xml](https://github.com/Factual/engine-braze-integration-android/tree/master/example/src/main/res/values/appboy.xml) where it says `Your Cloud Messaging Sender ID here`.
+The example app is setup to send a push notification using [Firebase](https://firebase.google.com/).  To view how to configure Braze's push notifications [click here](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/integration/).  Add your Cloud Messaging Sender ID to [appboy.xml](https://github.com/Factual/engine-braze-integration-android/tree/master/example/src/main/res/values/appboy.xml) where it says `Your Cloud Messaging Sender ID here`.
 
 ### Explore
 
