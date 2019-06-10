@@ -14,7 +14,6 @@ import java.util.List;
 public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
 
   // Key constants
-  static final String ENGINE_SPAN_EVENT_KEY = "engine_span_occurred";
   static final String SPAN_ID_KEY = "span_id";
   static final String EVENT_SOURCE_KEY = "event_source";
 
@@ -34,7 +33,6 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
   static final String POSTCODE_KEY = "postcode";
   static final String REGION_KEY = "region";
 
-  static final String ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY = "engine_span_attached_place";
   static final String NAME_KEY = "name";
   static final String PLACE_ID_KEY = "factual_id";
   static final String LATITUDE_KEY = "latitude";
@@ -96,7 +94,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
 
     // Send data to Braze
     Log.i(BrazeEngineIntegration.TAG, "Sending user journey span event to braze");
-    appboy.logCustomEvent(ENGINE_SPAN_EVENT_KEY, properties);
+    appboy.logCustomEvent(BrazeEngineIntegration.ENGINE_SPAN_EVENT_KEY, properties);
 
     // Get number of attached places to send
     List<FactualPlace> places = currentPlace.getPlaces();
@@ -139,7 +137,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
       properties.addProperty(POSTCODE_KEY, place.getPostcode());
 
       // Push custom event to braze
-      appboy.logCustomEvent(ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY, properties);
+      appboy.logCustomEvent(BrazeEngineIntegration.ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY, properties);
     }
   }
 

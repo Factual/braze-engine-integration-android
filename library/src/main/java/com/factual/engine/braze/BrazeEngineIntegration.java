@@ -43,6 +43,8 @@ public class BrazeEngineIntegration {
   static final String PLACE_CATEGORIES_KEY = "category_labels";
   static final String PLACE_CHAIN_KEY = "chain_name";
 
+  private BrazeEngineIntegration() {}
+
   /**
    * <b>WARNING: Braze must be initialized prior to executing this method. </b>
    * <p>
