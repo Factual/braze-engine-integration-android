@@ -16,7 +16,7 @@ public class BrazeEngineIntegration {
   private static Boolean trackingSpans = false;
 
   // Constants & keys
-  private static final String sourceName = "factual";
+  static final String sourceName = "factual";
 
   static final String TAG = "BrazeEngine";
 
@@ -68,6 +68,8 @@ public class BrazeEngineIntegration {
    * Based on the generality of the circumstance definition, Factual's Engine SDK may match multiple
    * potential candidate places the user may have been at or near when the circumstance was
    * triggered.
+   *
+   * @param response A single circumstance response from onCircumstancesMet
    */
   public static void pushToBraze(Context context, CircumstanceResponse response) {
     // push to braze with a default number of place events
@@ -78,26 +80,9 @@ public class BrazeEngineIntegration {
   }
 
   /**
-   * <b>WARNING: Braze must be initialized prior to executing this method. </b>
-   * <p>
-   * Sends a Circumstance Response to Braze as a custom event.
-   *
-   * <p>
-   * The following custom events may be sent:
-   * <br>
-   * a) Event named {@value #CIRCUMSTANCE_MET_EVENT_KEY} <i>+ CIRCUMSTANCE NAME</i> to represent the
-   * triggered circumstance
-   * <br>
-   * b) A developer defined max number of events named {@value #AT_PLACE_EVENT_KEY} <i>+
-   * CIRCUMSTANCE NAME</i> for each place the user is at which triggered the event.
-   * <br>
-   * c) A developer defined max number of events named {@value #NEAR_PLACE_EVENT_KEY} <i>+
-   * CIRCUMSTANCE NAME</i> for each place the user is near which triggered the event.
-   *
-   * <p>
-   * Based on the generality of the circumstance definition, Factual's Engine SDK may match multiple
-   * potential candidate places the user may have been at or near when the circumstance was
-   * triggered.
+   * @param maxAtPlaceEvents max number of at place events to send
+   * @param maxNearPlaceEvents max number of near place events to send
+   * @see BrazeEngineIntegration#pushToBraze(Context, CircumstanceResponse)
    */
   public static void pushToBraze(Context context,
       CircumstanceResponse response,
@@ -144,12 +129,12 @@ public class BrazeEngineIntegration {
   // Send places data to braze as custom events
   private static void sendPlacesData(List<FactualPlace> places,
       String eventName,
-      int maxPlaceEvents,
+      int numPlaceEvents,
       Appboy appboy,
       AppboyProperties properties) {
 
     // Loop through each place
-    for (int index = 0; index < maxPlaceEvents; index++) {
+    for (int index = 0; index < numPlaceEvents; index++) {
       FactualPlace place = places.get(index);
 
       // Get place data
@@ -197,7 +182,7 @@ public class BrazeEngineIntegration {
   /**
    * @param numMaxAttachedPlaceEventsPerSpan max number of custom events to push for each place the
    * user was at or near during the span
-   * @see BrazeEngineIntegration#trackUserJourneySpans(Context, int)
+   * @see BrazeEngineIntegration#trackUserJourneySpans(Context)
    */
   public static void trackUserJourneySpans(Context context,
       int numMaxAttachedPlaceEventsPerSpan) {

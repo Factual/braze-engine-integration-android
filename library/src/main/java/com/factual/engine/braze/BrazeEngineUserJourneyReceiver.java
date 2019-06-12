@@ -42,8 +42,6 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
   static final String DISTANCE_KEY = "distance";
   static final String LOCALITY_KEY = "locality";
 
-  private String sourceName = "factual";
-
   @Override
   public void onUserJourneyEvent(UserJourneyEvent userJourneyEvent) { /* Not supported */ }
 
@@ -77,7 +75,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
 
     // Populate properties
     properties.addProperty(SPAN_ID_KEY, spanId)
-        .addProperty(EVENT_SOURCE_KEY, sourceName)
+        .addProperty(EVENT_SOURCE_KEY, BrazeEngineIntegration.sourceName)
         .addProperty(START_TIME_UNAVAILABLE_KEY, startTimestampUnavailable)
         .addProperty(END_TIME_UNAVAILABLE_KEY, endTimestampUnavailable)
         .addProperty(START_TIMESTAMP_KEY, startTimestamp)
@@ -96,23 +94,20 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
     Log.i(BrazeEngineIntegration.TAG, "Sending user journey span event to braze");
     appboy.logCustomEvent(BrazeEngineIntegration.ENGINE_SPAN_EVENT_KEY, properties);
 
-    // Get number of attached places to send
-    List<FactualPlace> places = currentPlace.getPlaces();
-    int numberOfPlaces = places == null ? 0 : places.size();
-    int numPlaceEvents = getNumPlaceEvents(context, numberOfPlaces);
 
     // Send attached places data if there are any to send
-    if (numPlaceEvents > 0 && places != null) {
+    int numPlaceEvents = getNumPlaceEvents(context, currentPlace.getNumPlaces());
+    if (numPlaceEvents > 0) {
       Log.i(BrazeEngineIntegration.TAG,
           String.format("Sending %d attached place event(s) to braze", numPlaceEvents));
-      sendPlacesData(places, spanId, appboy, numPlaceEvents);
+      sendPlacesData(currentPlace.getPlaces(), spanId, appboy, numPlaceEvents);
     }
   }
 
   // Sends attached places data to Braze
   private void sendPlacesData(List<FactualPlace> places, String spanId, Appboy appboy, int numPlaceEvents) {
     AppboyProperties properties = new AppboyProperties();
-    properties.addProperty(EVENT_SOURCE_KEY, sourceName);
+    properties.addProperty(EVENT_SOURCE_KEY, BrazeEngineIntegration.sourceName);
     properties.addProperty(SPAN_ID_KEY, spanId);
 
     // Loop through attached places
@@ -141,7 +136,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
     }
   }
 
-  // Gets number of attached places to send
+  // Gets number of attached place events to send
   private static int getNumPlaceEvents(Context context, Integer numAvailableAttachedPlaces) {
     int maxAtPlaceEventsPerCircumstance = context
         .getSharedPreferences(BrazeEngineIntegration.class.getName(),

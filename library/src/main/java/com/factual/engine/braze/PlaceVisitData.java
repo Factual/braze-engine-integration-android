@@ -19,43 +19,47 @@ class PlaceVisitData {
   private boolean isHome = false;
   private boolean isWork = false;
 
-  public List<FactualPlace> getPlaces() {
+  List<FactualPlace> getPlaces() {
     return places;
   }
 
-  public String getLocalities() {
+  String getLocalities() {
     return localities;
   }
 
-  public String getCountry() {
+  String getCountry() {
     return country;
   }
 
-  public String getPostcode() {
+  String getPostcode() {
     return postcode;
   }
 
-  public String getRegion() {
+  String getRegion() {
     return region;
   }
 
-  public double getIngressLatitude() {
+  double getIngressLatitude() {
     return ingressLatitude;
   }
 
-  public double getIngressLongitude() {
+  double getIngressLongitude() {
     return ingressLongitude;
   }
 
-  public boolean isHome() {
+  int getNumPlaces() {
+    return places == null ? 0 : places.size();
+  }
+
+  boolean isHome() {
     return isHome;
   }
 
-  public boolean isWork() {
+  boolean isWork() {
     return isWork;
   }
 
-  public PlaceVisitData(FactualPlaceVisit visit) {
+  PlaceVisitData(FactualPlaceVisit visit) {
     // Current place information
     if (visit != null) {
       places = visit.getAttachedPlaces();
