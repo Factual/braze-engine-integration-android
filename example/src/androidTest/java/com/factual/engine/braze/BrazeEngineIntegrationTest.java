@@ -62,9 +62,6 @@ public class BrazeEngineIntegrationTest {
     Appboy appboy = Appboy.getInstance(appContext);
     appboy.changeUser(StubConfiguration.BRAZE_TEST_USER_ID);
     appboy.getCurrentUser().setEmail(StubConfiguration.BRAZE_TEST_USER_EMAIL);
-
-    // Start the integration
-    BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
   }
 
   /**
@@ -94,6 +91,9 @@ public class BrazeEngineIntegrationTest {
    */
   @Test
   public void testBrazeEngineSpans() {
+    // Start the integration
+    BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
+
     // Get date and time right before pushing span event to braze
     UserJourneySpan span = createSpan();
     Date aboutToRun = new Date();

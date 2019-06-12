@@ -16,7 +16,7 @@ import com.factual.engine.api.FactualException;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String TAG = "BrazeEngine";
+  private static final String TAG = "BrazeEngineExampleApp";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
