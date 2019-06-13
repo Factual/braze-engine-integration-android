@@ -54,7 +54,7 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
       */
       int maxNearPlaceEvents = 5;
 
-      /* Send circumstance event to  braze */
+      /* Send circumstance event to braze */
       BrazeEngineIntegration.pushToBraze(getContext().getApplicationContext(),
             response,
             maxAtPlaceEvents,
