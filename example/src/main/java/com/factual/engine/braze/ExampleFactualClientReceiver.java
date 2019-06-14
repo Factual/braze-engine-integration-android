@@ -1,18 +1,20 @@
-package com.factual.engine.braze.helloworld;
+package com.factual.engine.braze;
 
 import android.util.Log;
 import com.factual.engine.FactualClientReceiver;
+import com.factual.engine.api.CircumstanceResponse;
 import com.factual.engine.api.FactualCircumstance;
 import com.factual.engine.api.FactualConfigMetadata;
 import com.factual.engine.api.FactualError;
 import com.factual.engine.api.FactualInfo;
-import com.factual.engine.braze.BrazeEngineIntegration;
+import java.util.List;
 
 public class ExampleFactualClientReceiver extends FactualClientReceiver {
+
   @Override
   public void onStarted() {
     Log.i("engine", "Engine has started.");
-    BrazeEngineIntegration.initializeBrazeEngineIntegration(getContext().getApplicationContext());
+    BrazeEngineIntegration.trackUserJourneySpans(getContext().getApplicationContext());
   }
 
   @Override
@@ -39,8 +41,8 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
   public void onConfigLoad(FactualConfigMetadata data) {
     Log.i("engine", "Garage config loaded at: " + data.getVersion());
     if (data.getGarageRelease() != null) {
-      for (FactualCircumstance circumstance : data.getGarageRelease().getCircumstances()){
-        Log.i("engine", "loaded circumstance: " + circumstance.getCircumstanceId());
+      for (FactualCircumstance circumstance : data.getGarageRelease().getCircumstances()) {
+        Log.i("engine", "loaded circumstance with id: " + circumstance.getCircumstanceId());
       }
     } else {
       Log.i("engine", "Garage release is empty");
@@ -50,5 +52,14 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
   @Override
   public void onDiagnosticMessage(String diagnosticMessage) {
     Log.i("engine", diagnosticMessage);
+  }
+
+  @Override
+  public void onCircumstancesMet(List<CircumstanceResponse> responses) {
+    for (CircumstanceResponse response : responses) {
+      if (response.getCircumstance().getActionId().equals("push-to-braze")) {
+        BrazeEngineIntegration.pushToBraze(getContext().getApplicationContext(), response);
+      }
+    }
   }
 }

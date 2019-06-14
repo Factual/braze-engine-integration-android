@@ -1,62 +1,14 @@
-# Description
+# Factual / Braze SDK for Android ![Build Status](https://app.bitrise.io/app/f001791884e47358/status.svg?token=zill-aMMVVaFzOKXBor3Ow$branch=master)
 
-This repository contains the code for an integration between Factual's Engine SDK and Braze SDK.
-Using this integration library you can configure Factual's Engine SDK to send Braze custom events
-when the user is at a known factual place or when an engine circumstance with the actionId ```push-to-braze```
-is met. The following is a description of the custom events sent to Braze:
+This repository contains the code for an integration between [Factual's Engine SDK](https://www.factual.com/products/engine/) and [Braze's Mobile SDK](https://www.braze.com/). Using this library you can configure Factual's Location Engine SDK to send custom events to Braze to better understand users in the physical world and build personalized experiences to drive user engagement and revenue.
 
-## User Journey Events
+### Integration with Braze UI
 
-***Name***: engine_user_journey
-
-***Description***: User has visited a known factual place
-
-***Properties***:
-* name (place name)
-* factual_id (factual unique identifier for place)
-* latitude
-* longitude
-* user_latitude
-* user_longitude
-* place_categories (comma separated factual category ids)
-
-## Circumstance Met Events
-
-***Name***: engine_circumstance_[CIRCUMSTANCE_NAME]
-
-***Description***: A circumstance with actionId ```push-to-braze``` has been met
-
-***Properties***:
-* incidence_id
-* user_latitude
-* user_longitude
-
-## Circumstance Met At Place
-
-***Name***: engine_circumstance_place_at_[CIRCUMSTANCE_NAME]
-
-***Properties***:
-* incidence_id
-* name (place name)
-* factual_id (factual unique identifier for place)
-* latitude
-* longitude
-* user_latitude
-* user_longitude
-* place_categories (comma separated factual category ids)
-
-***Description***: Additional place related information about place at which the circumstance was met.
-             Based on the specificity of the circumstance rule it is possible that multiple places may
-             simultaneously trigger the circumstance. We choose to not include all of the places within the
-             event properties of a single event to simplify the usage within the Braze dashboard.
-             Instead, for each place that triggered the original circumstance we send a slightly
-             different custom event.
-
-***Note***: Use incidence_id to map the different Braze circumstance events to a single instance of an Engine circumstance met.
+see: [engine-braze-integration](https://github.com/Factual/engine-braze-integration)
 
 # Installation
 
-The project artifacts are available from Factual's bintray Maven repository.
+The project artifacts are available from Factual's Bintray Maven repository.
 
 ```
 // repository for the Factual artifacts
@@ -69,32 +21,86 @@ repositories {
 ...
 
 dependencies {
-  compile 'com.factual.engine:braze-engine:1.4.0'
+  compile 'com.factual.engine:braze-engine:2.0.0'
 }
 ```
 
-# Usage Requirements
-
-* Configured and started `Engine` client. [see here](http://developer.factual.com/engine/android/)
-* Configured `Appboy` client. [see here](https://www.braze.com/documentation/Android/#step-2-configure-the-braze-sdk-in-appboyxml)
-
 # Usage
 
+### Requirements
+
+* Configured and started `Engine` client. [see here](http://developer.factual.com/engine/android/)
+* Configured `Braze` client. [see here](https://www.braze.com/documentation/iOS/#initial-sdk-setup)
+
+### Tracking Factual Engine Circumstances
+
+Start tracking Factual Engine circumstances by calling ` BrazeEngineIntegration.pushToBraze()` in the `onCircumstancesMet()` callback of `FactualClientReceiver`.
+
 ```java
-//Whether user journey events should be sent to Braze
-boolean enableUserJourney = true;
+public class ExampleFactualClientReceiver extends FactualClientReceiver {
 
-/*
-Max number of "circumstance_met_at_place" that should be sent to user in case
-where multiple places simultaneously trigger the same circumstance. Default is
-set to 10.
-*/
-numMaxEventsPerCircumstance = 3;
+    @Override
+    public void onCircumstancesMet(List<CircumstanceResponse> responses) {
+      /*
+      Max number of "engine_at_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME.
+      Default is set to 10.
+      */
+      int maxAtPlaceEvents = 3;
 
+      /*
+      Max number of "engine_near_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME.
+      Default is set to 20.
+      */
+      int maxNearPlaceEvents = 5;
+      for (CircumstanceResponse response : responses) {
+        /* Send circumstance event to braze */
+        BrazeEngineIntegration.pushToBraze(getContext().getApplicationContext(),
+              response,
+              maxAtPlaceEvents,
+              maxNearPlaceEvents);
+    }
+  }
 
-BrazeEngineIntegration.initializeBrazeEngineIntegration(androidApplicationContext, enableUserJourney, numMaxEventsPerCircumstance);
+  ...
+
+}
 ```
 
-# Demo App
+### Tracking Factual Engine User Journey Spans
+Start tracking User Journey Spans by first setting User Journey Receiver to `BrazeEngineUserJourneyReceiver` before starting FactualEngine.
+```java
+public void initializeEngine() throws FactualException {
+    FactualEngine.initialize(this, Configuration.ENGINE_API_KEY);
+    FactualEngine.setReceiver(ExampleFactualClientReceiver.class);
+    FactualEngine.setUserJourneyReceiver(BrazeEngineUserJourneyReceiver.class);
+    FactualEngine.start();
+}
+```
 
-A demo app is included in this repository to demonstrate the usage of this library. [see here](demo)
+Then call `BrazeEngineIntegration.trackUserJourneySpans()` in the `onStarted()` method of `FactualClientReceiver`.
+
+```java
+public class ExampleFactualClientReceiver extends FactualClientReceiver {
+  @Override
+  public void onStarted() {
+    Log.i("engine", "Engine has started.");
+    /*
+    Max number of "engine_span_attached_place" events that should be sent per
+    "engine_span_occurred". Default is set to 20.
+    */
+    int maxAttachedPlaceEventsPerSpan = 10;
+
+    /* Start tracking spans */
+    BrazeEngineIntegration.trackUserJourneySpans(getContext().getApplicationContext(),
+        maxAttachedPlaceEventsPerSpan);
+}
+
+    ...
+}
+```
+
+Please refer to the [Factual Developer Docs](http://developer.factual.com) for more information about Engine.
+
+## Example App
+
+An example app is included in this repository to demonstrate the usage of this library, see [./example](./example) for documentation and usage instructions.

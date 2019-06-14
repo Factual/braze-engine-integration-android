@@ -1,24 +1,32 @@
-package com.factual.engine.braze.helloworld;
+package com.factual.engine.braze;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.appboy.Appboy;
 import com.appboy.support.AppboyLogger;
-import com.factual.engine.api.FactualException;
 import com.factual.engine.FactualEngine;
+import com.factual.engine.api.FactualException;
 
 public class MainActivity extends AppCompatActivity {
+
+  private static final String TAG = "BrazeEngineExampleApp";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+
+    Appboy appboy = Appboy.getInstance(getApplicationContext());
+    appboy.changeUser(Configuration.BRAZE_USER_ID);
+    appboy.getCurrentUser().setEmail(Configuration.BRAZE_USER_EMAIL);
+
+    /* Set up Engine */
     try {
       initializeEngine();
       if (isRequiredPermissionAvailable()) {
@@ -34,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
   public void initializeEngine() throws FactualException {
     Log.i("engine", "starting initialization");
-    Resources res = getResources();
-    FactualEngine.initialize(getApplicationContext(), res.getString(R.string.com_factual_engine_api_key));
+    FactualEngine.initialize(getApplicationContext(), Configuration.ENGINE_API_KEY);
     FactualEngine.setReceiver(ExampleFactualClientReceiver.class);
+    FactualEngine.setUserJourneyReceiver(BrazeEngineUserJourneyReceiver.class);
     Log.i("engine", "initialization complete");
   }
 
@@ -49,22 +57,24 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  /*********************************** Permission Boiler plate ************************************/
+  /* Permission Boiler plate */
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+      @NonNull int[] grantResults) {
     if (isRequiredPermissionAvailable()) {
       startEngine();
     } else {
-      Log.e("engine", "Necessary permissions were never provided.");
+      Log.e(TAG, "Necessary permissions were never provided.");
     }
   }
 
-  public boolean isRequiredPermissionAvailable(){
+  public boolean isRequiredPermissionAvailable() {
     return ContextCompat.checkSelfPermission(this,
         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
         ContextCompat.checkSelfPermission(this,
-            Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            Manifest.permission.ACCESS_COARSE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED &&
         ContextCompat.checkSelfPermission(this,
             Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED;
   }
@@ -79,5 +89,4 @@ public class MainActivity extends AppCompatActivity {
         },
         0);
   }
-
 }
