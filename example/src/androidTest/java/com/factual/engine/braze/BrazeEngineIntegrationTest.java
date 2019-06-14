@@ -73,7 +73,7 @@ public class BrazeEngineIntegrationTest {
     Date aboutToRun = new Date();
     delay(1);
 
-    // push a circumstance event to braze
+    // Push a circumstance event to braze
     BrazeEngineIntegration.pushToBraze(appContext, createCircumstance(), 1, 0);
 
     // Get events we are expecting to send to braze

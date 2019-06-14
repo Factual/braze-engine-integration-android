@@ -91,7 +91,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
         .addProperty(IS_WORK_KEY, currentPlace.isWork());
 
     // Send data to Braze
-    Log.i(BrazeEngineIntegration.TAG, "Sending user journey span event to braze");
+    Log.i(BrazeEngineIntegration.TAG, "Sending user journey span event to Braze");
     appboy.logCustomEvent(BrazeEngineIntegration.ENGINE_SPAN_EVENT_KEY, properties);
 
 
@@ -99,7 +99,7 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
     int numPlaceEvents = getNumPlaceEvents(context, currentPlace.getNumPlaces());
     if (numPlaceEvents > 0) {
       Log.i(BrazeEngineIntegration.TAG,
-          String.format("Sending %d attached place event(s) to braze", numPlaceEvents));
+          String.format("Sending %d attached place event(s) to Braze", numPlaceEvents));
       sendPlacesData(currentPlace.getPlaces(), spanId, appboy, numPlaceEvents);
     }
   }

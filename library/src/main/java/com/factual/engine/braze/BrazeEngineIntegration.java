@@ -104,7 +104,7 @@ public class BrazeEngineIntegration {
     properties.addProperty(EVENT_SOURCE_KEY, sourceName);
 
     // Push custom event to braze
-    Log.i(TAG, String.format("Sending circumstance %s event to braze", circumstanceName));
+    Log.i(TAG, String.format("Sending circumstance %s event to Braze", circumstanceName));
     String circumstanceEventName = CIRCUMSTANCE_MET_EVENT_KEY + circumstanceName;
     appboy.logCustomEvent(circumstanceEventName, properties);
 
@@ -112,7 +112,7 @@ public class BrazeEngineIntegration {
     List<FactualPlace> atPlaces = response.getAtPlaces();
     int numAtPlaceEvents = Math.min(maxAtPlaceEvents, atPlaces.size());
     if (numAtPlaceEvents > 0) {
-      Log.i(TAG, String.format("Sending %d at place event(s) to braze", numAtPlaceEvents));
+      Log.i(TAG, String.format("Sending %d at place event(s) to Braze", numAtPlaceEvents));
       String atPlaceEventName = AT_PLACE_EVENT_KEY + circumstanceName;
       sendPlacesData(atPlaces, atPlaceEventName, numAtPlaceEvents, appboy, properties);
     }
@@ -120,7 +120,7 @@ public class BrazeEngineIntegration {
     List<FactualPlace> nearPlaces = response.getNearPlaces();
     int numNearPlaceEvents = Math.min(maxNearPlaceEvents, nearPlaces.size());
     if (numNearPlaceEvents > 0) {
-      Log.i(TAG, String.format("Sending %d near place event(s) to braze", numNearPlaceEvents));
+      Log.i(TAG, String.format("Sending %d near place event(s) to Braze", numNearPlaceEvents));
       String nearPlaceEventName = NEAR_PLACE_EVENT_KEY + circumstanceName;
       sendPlacesData(nearPlaces, nearPlaceEventName, numNearPlaceEvents, appboy, properties);
     }
