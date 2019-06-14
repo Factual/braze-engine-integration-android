@@ -41,24 +41,23 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
 
     @Override
     public void onCircumstancesMet(List<CircumstanceResponse> responses) {
-      for (CircumstanceResponse response : responses) {
       /*
       Max number of "engine_at_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME.
       Default is set to 10.
       */
-      int maxAtPlaceEvents = 3
+      int maxAtPlaceEvents = 3;
 
       /*
       Max number of "engine_near_" events that should be sent per "engine_" + CIRCUMSTANCE_NAME.
       Default is set to 20.
       */
       int maxNearPlaceEvents = 5;
-
-      /* Send circumstance event to braze */
-      BrazeEngineIntegration.pushToBraze(getContext().getApplicationContext(),
-            response,
-            maxAtPlaceEvents,
-            maxNearPlaceEvents);
+      for (CircumstanceResponse response : responses) {
+        /* Send circumstance event to braze */
+        BrazeEngineIntegration.pushToBraze(getContext().getApplicationContext(),
+              response,
+              maxAtPlaceEvents,
+              maxNearPlaceEvents);
     }
   }
 
