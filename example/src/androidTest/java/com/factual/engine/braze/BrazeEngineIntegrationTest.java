@@ -71,7 +71,7 @@ public class BrazeEngineIntegrationTest {
   public void testBrazeEngineCircumstances() {
     // Get date and time right before pushing circumstance event to braze
     Date aboutToRun = new Date();
-    delay(1);
+    delay(5);
 
     // Push a circumstance event to braze
     BrazeEngineIntegration.pushToBraze(appContext, createCircumstance(), 1, 0);
@@ -97,7 +97,7 @@ public class BrazeEngineIntegrationTest {
     // Get date and time right before pushing span event to braze
     UserJourneySpan span = createSpan();
     Date aboutToRun = new Date();
-    delay(1);
+    delay(5);
 
     // Push span event to braze
     BrazeEngineUserJourneyReceiver receiver = new BrazeEngineUserJourneyReceiver();
@@ -120,7 +120,7 @@ public class BrazeEngineIntegrationTest {
    */
   private void verify(Date preRun, HashSet<String> events) {
     // Wait for Braze to track event
-    delay(10);
+    delay(60);
 
     // Ensure data was sent to Braze
     OkHttpClient client = new OkHttpClient();
