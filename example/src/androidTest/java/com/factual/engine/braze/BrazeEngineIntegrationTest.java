@@ -183,19 +183,21 @@ public class BrazeEngineIntegrationTest {
   }
 
   /**
-   * Creates a unique circumstance response to be tested.
+   * Creates a circumstance response to be tested.
    *
-   * @return A unique Circumstance Response object to be tested
+   * @return A Circumstance Response object to be tested
    */
   private CircumstanceResponse createCircumstance() {
     String circumstanceId = "test-circumstance";
     String circumstanceExpression = "(at any-factual-place)";
-    String actionId = "push-to-braze";
+    String tag = "push-to-braze";
+    List<String> tags = new ArrayList<>();
+    tags.add(tag);
     String circumstanceName = StubConfiguration.CIRCUMSTANCE_NAME;
     FactualCircumstance circumstance = new FactualCircumstance(
         circumstanceId,
         circumstanceExpression,
-        actionId,
+        tags,
         circumstanceName);
     String placeName = "test-place";
     String factualPlaceId = "test-id-123";
@@ -222,10 +224,9 @@ public class BrazeEngineIntegrationTest {
   }
 
   /**
-   * Creates a unique span to be tested. The unique values are the startTimestamp and endTimestamp
-   * (creating a unique duration), id, distance, latitude, and longitude.
+   * Creates a unique span to be tested.
    *
-   * @return A unique UserJourneySpan object to be tested.
+   * @return A UserJourneySpan object to be tested.
    */
   private UserJourneySpan createSpan() {
     // Create unique parameters for UserJourneySpan

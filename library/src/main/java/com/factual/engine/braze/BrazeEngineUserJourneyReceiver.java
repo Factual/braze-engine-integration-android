@@ -119,17 +119,17 @@ public class BrazeEngineUserJourneyReceiver extends UserJourneyReceiver {
       String chain = PlaceChainMap.getChain(place);
 
       // Add properties
-      properties.addProperty(NAME_KEY, place.getName());
-      properties.addProperty(CATEGORIES_KEY, categories);
-      properties.addProperty(CHAIN_KEY, chain);
-      properties.addProperty(PLACE_ID_KEY, place.getFactualId());
-      properties.addProperty(LATITUDE_KEY, place.getLatitude());
-      properties.addProperty(LONGITUDE_KEY, place.getLongitude());
-      properties.addProperty(DISTANCE_KEY, place.getDistance());
-      properties.addProperty(LOCALITY_KEY, place.getLocality());
-      properties.addProperty(REGION_KEY, place.getRegion());
-      properties.addProperty(COUNTRY_KEY, place.getCountry());
-      properties.addProperty(POSTCODE_KEY, place.getPostcode());
+      properties.addProperty(NAME_KEY, place.getName())
+          .addProperty(CATEGORIES_KEY, categories)
+          .addProperty(CHAIN_KEY, chain)
+          .addProperty(PLACE_ID_KEY, place.getFactualId())
+          .addProperty(LATITUDE_KEY, place.getLatitude())
+          .addProperty(LONGITUDE_KEY, place.getLongitude())
+          .addProperty(DISTANCE_KEY, place.getDistance())
+          .addProperty(LOCALITY_KEY, place.getLocality())
+          .addProperty(REGION_KEY, place.getRegion())
+          .addProperty(COUNTRY_KEY, place.getCountry())
+          .addProperty(POSTCODE_KEY, place.getPostcode());
 
       // Push custom event to braze
       appboy.logCustomEvent(BrazeEngineIntegration.ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY, properties);
