@@ -21,7 +21,7 @@ repositories {
 ...
 
 dependencies {
-  compile 'com.factual.engine:braze-engine:2.0.0'
+  compile 'com.factual.engine:braze-engine:2.1.0'
 }
 ```
 
@@ -67,11 +67,13 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
 ```
 
 ### Tracking Factual Engine User Journey Spans
+
 Start tracking User Journey Spans by first setting User Journey Receiver to `BrazeEngineUserJourneyReceiver` before starting FactualEngine.
 ```java
 public void initializeEngine() throws FactualException {
-    FactualEngine.initialize(this, Configuration.ENGINE_API_KEY);
-    FactualEngine.setReceiver(ExampleFactualClientReceiver.class);
+    FactualEngine.initialize(getApplicationContext(),
+        Configuration.ENGINE_API_KEY,
+        ExampleFactualClientReceiver.class);
     FactualEngine.setUserJourneyReceiver(BrazeEngineUserJourneyReceiver.class);
     FactualEngine.start();
 }

@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.appboy.Appboy;
 import com.appboy.models.outgoing.AppboyProperties;
+import com.factual.engine.integrationutils.PlaceCategoryMap;
+import com.factual.engine.integrationutils.PlaceChainMap;
 import com.factual.engine.api.CircumstanceResponse;
 import com.factual.engine.api.FactualPlace;
 import java.util.List;
@@ -30,6 +32,7 @@ public class BrazeEngineIntegration {
 
   static final String CIRCUMSTANCE_MET_EVENT_KEY = "engine_";
   static final String INCIDENT_ID_KEY = "incidence_id";
+  static final String TAGS_KEY = "tags";
   static final String USER_LATITUDE_KEY = "user_latitude";
   static final String USER_LONGITUDE_KEY = "user_longitude";
   static final String EVENT_SOURCE_KEY = "event_source";
@@ -93,15 +96,17 @@ public class BrazeEngineIntegration {
 
     // Get circumstance data
     String circumstanceName = response.getCircumstance().getName();
+    String tags = TextUtils.join(", ", response.getCircumstance().getTags());
     double userLatitude = response.getLocation().getLatitude();
     double userLongitude = response.getLocation().getLongitude();
     String incidentId = UUID.randomUUID().toString();
 
     // Add data properties
-    properties.addProperty(INCIDENT_ID_KEY, incidentId);
-    properties.addProperty(USER_LATITUDE_KEY, userLatitude);
-    properties.addProperty(USER_LONGITUDE_KEY, userLongitude);
-    properties.addProperty(EVENT_SOURCE_KEY, sourceName);
+    properties.addProperty(INCIDENT_ID_KEY, incidentId)
+        .addProperty(TAGS_KEY, tags)
+        .addProperty(USER_LATITUDE_KEY, userLatitude)
+        .addProperty(USER_LONGITUDE_KEY, userLongitude)
+        .addProperty(EVENT_SOURCE_KEY, sourceName);
 
     // Push custom event to braze
     Log.i(TAG, String.format("Sending circumstance %s event to Braze", circumstanceName));
@@ -142,12 +147,12 @@ public class BrazeEngineIntegration {
       String chain = PlaceChainMap.getChain(place);
 
       // Add properties
-      properties.addProperty(PLACE_NAME_KEY, place.getName());
-      properties.addProperty(PLACE_ID_KEY, place.getFactualId());
-      properties.addProperty(PLACE_LATITUDE_KEY, place.getLatitude());
-      properties.addProperty(PLACE_LONGITUDE_KEY, place.getLongitude());
-      properties.addProperty(PLACE_CATEGORIES_KEY, categories);
-      properties.addProperty(PLACE_CHAIN_KEY, chain);
+      properties.addProperty(PLACE_NAME_KEY, place.getName())
+          .addProperty(PLACE_ID_KEY, place.getFactualId())
+          .addProperty(PLACE_LATITUDE_KEY, place.getLatitude())
+          .addProperty(PLACE_LONGITUDE_KEY, place.getLongitude())
+          .addProperty(PLACE_CATEGORIES_KEY, categories)
+          .addProperty(PLACE_CHAIN_KEY, chain);
 
       // Push custom event to braze
       appboy.logCustomEvent(eventName, properties);

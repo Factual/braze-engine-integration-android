@@ -17,7 +17,7 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-        <activity android:name="com.factual.engine.braze.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,8 +33,8 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <receiver android:name="com.factual.engine.braze.ExampleFactualClientReceiver"/>
-        <receiver android:name="com.factual.engine.braze.BrazeEngineUserJourneyReceiver"/>
+        <receiver android:name=".ExampleFactualClientReceiver"/>
+        <receiver android:name=".BrazeEngineUserJourneyReceiver"/>
         <receiver android:name="com.appboy.AppboyFcmReceiver" android:permission="com.google.android.c2dm.permission.SEND">
           <intent-filter>
             <action android:name="com.google.android.c2dm.intent.RECEIVE" />

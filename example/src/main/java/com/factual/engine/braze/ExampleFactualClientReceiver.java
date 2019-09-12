@@ -57,7 +57,7 @@ public class ExampleFactualClientReceiver extends FactualClientReceiver {
   @Override
   public void onCircumstancesMet(List<CircumstanceResponse> responses) {
     for (CircumstanceResponse response : responses) {
-      if (response.getCircumstance().getActionId().equals("push-to-braze")) {
+      if (response.getCircumstance().getTags().contains("push-to-braze")) {
         BrazeEngineIntegration.pushToBraze(getContext().getApplicationContext(), response);
       }
     }

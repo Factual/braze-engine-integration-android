@@ -42,8 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
   public void initializeEngine() throws FactualException {
     Log.i("engine", "starting initialization");
-    FactualEngine.initialize(getApplicationContext(), Configuration.ENGINE_API_KEY);
-    FactualEngine.setReceiver(ExampleFactualClientReceiver.class);
+    FactualEngine.initialize(getApplicationContext(),
+        Configuration.ENGINE_API_KEY,
+        ExampleFactualClientReceiver.class);
     FactualEngine.setUserJourneyReceiver(BrazeEngineUserJourneyReceiver.class);
     Log.i("engine", "initialization complete");
   }
