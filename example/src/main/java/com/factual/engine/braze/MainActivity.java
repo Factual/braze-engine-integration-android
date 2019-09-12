@@ -10,9 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.appboy.Appboy;
-import com.appboy.support.AppboyLogger;
 import com.factual.engine.FactualEngine;
-import com.factual.engine.api.FactualException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,36 +24,19 @@ public class MainActivity extends AppCompatActivity {
     appboy.changeUser(Configuration.BRAZE_USER_ID);
     appboy.getCurrentUser().setEmail(Configuration.BRAZE_USER_EMAIL);
 
-    /* Set up Engine */
-    try {
+    /* Setup Engine */
+    if (!isRequiredPermissionAvailable()) {
+      requestLocationPermissions();
+    } else {
       initializeEngine();
-      if (isRequiredPermissionAvailable()) {
-        startEngine();
-      } else {
-        requestLocationPermissions();
       }
-    } catch (FactualException e) {
-      Log.e("engine", e.getMessage());
     }
 
-  }
-
-  public void initializeEngine() throws FactualException {
+  public void initializeEngine() {
     Log.i("engine", "starting initialization");
     FactualEngine.initialize(getApplicationContext(),
         Configuration.ENGINE_API_KEY,
         ExampleFactualClientReceiver.class);
-    FactualEngine.setUserJourneyReceiver(BrazeEngineUserJourneyReceiver.class);
-    Log.i("engine", "initialization complete");
-  }
-
-  private void startEngine() {
-    try {
-      AppboyLogger.setLogLevel(Log.VERBOSE);
-      FactualEngine.start();
-    } catch (FactualException e) {
-      Log.e("engine", e.getMessage());
-    }
   }
 
   /* Permission Boiler plate */
@@ -64,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
       @NonNull int[] grantResults) {
     if (isRequiredPermissionAvailable()) {
-      startEngine();
+      initializeEngine();
     } else {
       Log.e(TAG, "Necessary permissions were never provided.");
     }
