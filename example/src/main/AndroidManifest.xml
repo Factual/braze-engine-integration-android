@@ -23,10 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-          android:exported="false"
-          android:name="com.factual.engine.FactualJobIntentService"
-          android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <service android:name="com.appboy.AppboyFirebaseMessagingService">
             <intent-filter>
