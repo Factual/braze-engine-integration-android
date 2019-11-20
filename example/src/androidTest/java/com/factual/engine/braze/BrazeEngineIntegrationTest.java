@@ -2,8 +2,8 @@ package com.factual.engine.braze;
 
 import android.content.Context;
 import android.location.Location;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.appboy.Appboy;
 import com.factual.engine.api.CircumstanceResponse;

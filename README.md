@@ -21,7 +21,7 @@ repositories {
 ...
 
 dependencies {
-  compile 'com.factual.engine:braze-engine:2.1.0'
+  compile 'com.factual.engine:braze-engine:3.0.0'
 }
 ```
 
@@ -30,7 +30,7 @@ dependencies {
 ### Requirements
 
 * Configured and started `Engine` client. [see here](http://developer.factual.com/engine/android/)
-* Configured `Braze` client. [see here](https://www.braze.com/documentation/iOS/#initial-sdk-setup)
+* Configured `Braze` client. [see here](https://www.braze.com/documentation/android/#initial-sdk-setup)
 
 ### Tracking Factual Engine Circumstances
 
