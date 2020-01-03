@@ -51,7 +51,9 @@ public class BrazeEngineIntegrationTest {
   private static String EVENT_DATE_KEY = "last";
 
   private static String TAG = "test error";
-  private static int maxAttempts = 2;
+  private static int MAX_ATTEMPTS = 3;
+  private static int SECONDS_PER_MINUTE = 60;
+  private static int ADDITIONAL_MINUTES_PER_RETRY = 5;
 
   private Context appContext;
 
@@ -74,10 +76,9 @@ public class BrazeEngineIntegrationTest {
   @Test
   public void testBrazeEngineCircumstances() {
     Boolean testPassed = false;
-    for (int attemptNumber = 0; attemptNumber < maxAttempts && !testPassed; attemptNumber++) {
+    for (int attemptNumber = 1; attemptNumber <= MAX_ATTEMPTS && !testPassed; attemptNumber++) {
       // Get date and time right before pushing circumstance event to braze
       Date aboutToRun = new Date();
-      delay(5);
 
       // Push a circumstance event to braze
       BrazeEngineIntegration.pushToBraze(appContext, createCircumstance(), 1, 0);
@@ -91,14 +92,12 @@ public class BrazeEngineIntegrationTest {
       // Verify that events made it to braze
       testPassed = verify(aboutToRun, events);
 
-      if (!testPassed && attemptNumber != maxAttempts - 1) {
+      if (!testPassed && attemptNumber != MAX_ATTEMPTS) {
         delayRetry(attemptNumber);
       }
     }
 
-    if (!testPassed) {
-      Assert.fail("Braze did not receive circumstance event");
-    }
+    Assert.assertTrue("Braze did not receive circumstance event", testPassed);
   }
 
   /**
@@ -107,14 +106,13 @@ public class BrazeEngineIntegrationTest {
   @Test
   public void testBrazeEngineSpans() {
     Boolean testPassed = false;
-    for (int attemptNumber = 0; attemptNumber < maxAttempts && !testPassed; attemptNumber++) {
+    for (int attemptNumber = 1; attemptNumber <= MAX_ATTEMPTS && !testPassed; attemptNumber++) {
       // Start the integration
       BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
 
       // Get date and time right before pushing span event to braze
       UserJourneySpan span = createSpan();
       Date aboutToRun = new Date();
-      delay(5);
 
       // Push span event to braze
       BrazeEngineUserJourneyReceiver receiver = new BrazeEngineUserJourneyReceiver();
@@ -128,14 +126,12 @@ public class BrazeEngineIntegrationTest {
       // Verify that events made it to braze
       testPassed = verify(aboutToRun, events);
 
-      if (!testPassed && attemptNumber != maxAttempts - 1) {
+      if (!testPassed && attemptNumber != MAX_ATTEMPTS) {
         delayRetry(attemptNumber);
       }
     }
 
-    if (!testPassed) {
-      Assert.fail("Braze did not receive circumstance event");
-    }
+    Assert.assertTrue("Braze did not receive circumstance event", testPassed);
   }
 
   /**
@@ -202,13 +198,12 @@ public class BrazeEngineIntegrationTest {
   }
 
   /**
-   * First failed attempt will have a 5 minute delay before retrying
-   * Every following attempt will have an additional 10 minutes
+   * Delays an additional 5 minutes between each retry
    *
-   * @param attempt Number of attempts already tried (should start at 0)
+   * @param attempt Current number of attempts
    */
   private void delayRetry(int attempt) {
-    int retryDelaySeconds = 300 + 600 * attempt;
+    int retryDelaySeconds = ADDITIONAL_MINUTES_PER_RETRY * SECONDS_PER_MINUTE * attempt;
     Log.w(TAG, String.format("Test failed, retrying in %d seconds", retryDelaySeconds));
     delay(retryDelaySeconds);
   }
