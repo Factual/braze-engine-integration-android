@@ -2,6 +2,7 @@ package com.factual.engine.braze;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -49,6 +50,11 @@ public class BrazeEngineIntegrationTest {
   private static String EVENT_NAME_KEY = "name";
   private static String EVENT_DATE_KEY = "last";
 
+  private static String TAG = "test error";
+  private static int MAX_ATTEMPTS = 3;
+  private static int SECONDS_PER_MINUTE = 60;
+  private static int ADDITIONAL_MINUTES_PER_RETRY = 5;
+
   private Context appContext;
 
   /**
@@ -69,21 +75,29 @@ public class BrazeEngineIntegrationTest {
    */
   @Test
   public void testBrazeEngineCircumstances() {
-    // Get date and time right before pushing circumstance event to braze
-    Date aboutToRun = new Date();
-    delay(5);
+    Boolean testPassed = false;
+    for (int attemptNumber = 0; attemptNumber < MAX_ATTEMPTS && !testPassed; attemptNumber++) {
+      // Get date and time right before pushing circumstance event to braze
+      Date aboutToRun = new Date();
 
-    // Push a circumstance event to braze
-    BrazeEngineIntegration.pushToBraze(appContext, createCircumstance(), 1, 0);
+      // Push a circumstance event to braze
+      BrazeEngineIntegration.pushToBraze(appContext, createCircumstance(), 1, 0);
 
-    // Get events we are expecting to send to braze
-    HashSet<String> events = new HashSet<>();
-    events.add(BrazeEngineIntegration.CIRCUMSTANCE_MET_EVENT_KEY
-        + StubConfiguration.CIRCUMSTANCE_NAME);
-    events.add(BrazeEngineIntegration.AT_PLACE_EVENT_KEY + StubConfiguration.CIRCUMSTANCE_NAME);
+      // Get events we are expecting to send to braze
+      HashSet<String> events = new HashSet<>();
+      events.add(BrazeEngineIntegration.CIRCUMSTANCE_MET_EVENT_KEY
+          + StubConfiguration.CIRCUMSTANCE_NAME);
+      events.add(BrazeEngineIntegration.AT_PLACE_EVENT_KEY + StubConfiguration.CIRCUMSTANCE_NAME);
 
-    // Verify that events made it to braze
-    verify(aboutToRun, events);
+      // Verify that events made it to braze
+      testPassed = verify(aboutToRun, events);
+
+      if (!testPassed && attemptNumber < MAX_ATTEMPTS) {
+        delayRetry(attemptNumber + 1);
+      }
+    }
+
+    Assert.assertTrue("Braze did not receive circumstance event", testPassed);
   }
 
   /**
@@ -91,25 +105,33 @@ public class BrazeEngineIntegrationTest {
    */
   @Test
   public void testBrazeEngineSpans() {
-    // Start the integration
-    BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
+    Boolean testPassed = false;
+    for (int attemptNumber = 0; attemptNumber < MAX_ATTEMPTS && !testPassed; attemptNumber++) {
+      // Start the integration
+      BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
 
-    // Get date and time right before pushing span event to braze
-    UserJourneySpan span = createSpan();
-    Date aboutToRun = new Date();
-    delay(5);
+      // Get date and time right before pushing span event to braze
+      UserJourneySpan span = createSpan();
+      Date aboutToRun = new Date();
 
-    // Push span event to braze
-    BrazeEngineUserJourneyReceiver receiver = new BrazeEngineUserJourneyReceiver();
-    receiver.handleUserJourneySpan(appContext, span);
+      // Push span event to braze
+      BrazeEngineUserJourneyReceiver receiver = new BrazeEngineUserJourneyReceiver();
+      receiver.handleUserJourneySpan(appContext, span);
 
-    // Get events we are expecting to send to braze
-    HashSet<String> events = new HashSet<>();
-    events.add(BrazeEngineIntegration.ENGINE_SPAN_EVENT_KEY);
-    events.add(BrazeEngineIntegration.ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY);
+      // Get events we are expecting to send to braze
+      HashSet<String> events = new HashSet<>();
+      events.add(BrazeEngineIntegration.ENGINE_SPAN_EVENT_KEY);
+      events.add(BrazeEngineIntegration.ENGINE_SPAN_ATTACHED_PLACE_EVENT_KEY);
 
-    // Verify that events made it to braze
-    verify(aboutToRun, events);
+      // Verify that events made it to braze
+      testPassed = verify(aboutToRun, events);
+
+      if (!testPassed && attemptNumber < MAX_ATTEMPTS) {
+        delayRetry(attemptNumber + 1);
+      }
+    }
+
+    Assert.assertTrue("Braze did not receive circumstance event", testPassed);
   }
 
   /**
@@ -118,7 +140,7 @@ public class BrazeEngineIntegrationTest {
    * @param preRun Date right before sending data to Braze
    * @param events Events to look for from braze
    */
-  private void verify(Date preRun, HashSet<String> events) {
+  private Boolean verify(Date preRun, HashSet<String> events) {
     // Wait for Braze to track event
     delay(60);
 
@@ -153,20 +175,37 @@ public class BrazeEngineIntegrationTest {
           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
           Date date = dateFormat.parse(dateString);
           // Ensure this is the event we just sent and not an old event
+          if (!preRun.before(date)) {
+            Log.w(TAG, String.format("Braze did not receive event: %s", eventName));
+            return false;
+          }
 
-          Assert.assertTrue(String.format("Braze did not receive event: %s", eventName),
-              preRun.before(date));
           events.remove(eventName);
         }
       }
 
-      Assert.assertEquals(String.format("Events missing from custom events: %s", events.toString()),
-          0,
-          events.size());
+      if (events.size() != 0) {
+        Log.e(TAG, String.format("Events missing from custom events: %s", events.toString()));
+        return false;
+      }
 
     } catch (Exception e) {
-      fail("Failed to get valid response from Braze: " + e.getMessage());
+      Log.e(TAG, "Failed to get valid response from Braze: " + e.getMessage());
+      return false;
     }
+
+    return true;
+  }
+
+  /**
+   * Delays an additional 5 minutes between each retry
+   *
+   * @param attempt Current number of attempts
+   */
+  private void delayRetry(int attempt) {
+    int retryDelaySeconds = ADDITIONAL_MINUTES_PER_RETRY * SECONDS_PER_MINUTE * attempt;
+    Log.w(TAG, String.format("Test failed, retrying in %d seconds", retryDelaySeconds));
+    delay(retryDelaySeconds);
   }
 
   /**
