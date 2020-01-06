@@ -76,7 +76,7 @@ public class BrazeEngineIntegrationTest {
   @Test
   public void testBrazeEngineCircumstances() {
     Boolean testPassed = false;
-    for (int attemptNumber = 1; attemptNumber <= MAX_ATTEMPTS && !testPassed; attemptNumber++) {
+    for (int attemptNumber = 0; attemptNumber < MAX_ATTEMPTS && !testPassed; attemptNumber++) {
       // Get date and time right before pushing circumstance event to braze
       Date aboutToRun = new Date();
 
@@ -92,8 +92,8 @@ public class BrazeEngineIntegrationTest {
       // Verify that events made it to braze
       testPassed = verify(aboutToRun, events);
 
-      if (!testPassed && attemptNumber != MAX_ATTEMPTS) {
-        delayRetry(attemptNumber);
+      if (!testPassed && attemptNumber < MAX_ATTEMPTS) {
+        delayRetry(attemptNumber + 1);
       }
     }
 
@@ -106,7 +106,7 @@ public class BrazeEngineIntegrationTest {
   @Test
   public void testBrazeEngineSpans() {
     Boolean testPassed = false;
-    for (int attemptNumber = 1; attemptNumber <= MAX_ATTEMPTS && !testPassed; attemptNumber++) {
+    for (int attemptNumber = 0; attemptNumber < MAX_ATTEMPTS && !testPassed; attemptNumber++) {
       // Start the integration
       BrazeEngineIntegration.trackUserJourneySpans(appContext, 1);
 
@@ -126,8 +126,8 @@ public class BrazeEngineIntegrationTest {
       // Verify that events made it to braze
       testPassed = verify(aboutToRun, events);
 
-      if (!testPassed && attemptNumber != MAX_ATTEMPTS) {
-        delayRetry(attemptNumber);
+      if (!testPassed && attemptNumber < MAX_ATTEMPTS) {
+        delayRetry(attemptNumber + 1);
       }
     }
 
